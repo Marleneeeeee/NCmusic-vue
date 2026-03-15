@@ -1,0 +1,27 @@
+{
+  "name": "ncmusic",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@icon-park/vue-next": "^1.4.2",
+    "axios": "^1.13.3",
+    "element-plus": "^2.13.4",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.26",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.3",
+    "vite": "^7.3.1",
+    "vite-plugin-vue-devtools": "^8.0.5"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}
