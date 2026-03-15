@@ -1,38 +1,49 @@
-# NCmusic
+# NCmusic-vue 🎵
 
-This template should help get you started developing with Vue 3 in Vite.
+一款基于 **Vue 3** + **Pinia** + **Vite** 构建的高颜值音乐流媒体 Web 应用。
 
-## Recommended IDE Setup
+> **🚧 项目声明**：本项目目前仍处于 **Active Development (积极开发与完善中)** 阶段。部分功能正在迭代，UI 细节也在持续优化，欢迎 Fork 或提 Issue 交流。
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+---
 
-## Recommended Browser Setup
+## ✨ 项目亮点
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+* **沉浸式红黑视觉**：深度还原网易云音乐经典配色方案，打造极简、硬朗的黑胶质感。
+* **全局状态管理**：利用 **Pinia** 维护全局播放状态，实现跨页面的无缝播放体验。
+* **极致滚动优化**：针对 `.main-content` 容器定制化滚动逻辑，解决 Tab 切换与详情页返回的滚动条重置难题。
+* **高性能列表渲染**：采用 `IntersectionObserver` 实现搜索结果的懒加载与无限滚动。
 
-## Customize configuration
+---
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## 🛠️ 技术栈
 
-## Project Setup
+| 工具 | 作用 |
+| :--- | :--- |
+| **Vue 3 (Composition API)** | 核心开发框架 |
+| **Vite** | 下一代前端构建工具 |
+| **Pinia** | 极简、类型安全的全局状态管理 |
+| **Vue Router** | 单页应用路由控制（支持嵌套路由） |
+| **Axios** | 异步请求封装与 API 通信 |
 
-```sh
+---
+
+## 🚀 快速启动
+
+在运行本项目之前，**请务必确保你的本地环境已部署并运行了网易云音乐后台 API**。
+
+### 1. 运行后端 API
+本项目依赖于 [NeteaseCloudMusicApi](https://github.com/NeteaseCloudMusicApiEnhanced/api-enhanced)。
+默认 API 端口为 http://localhost:3000
+
+### 2.运行本项目
+```bash
+# 1. 安装项目依赖
 pnpm install
-```
 
-### Compile and Hot-Reload for Development
-
-```sh
+# 2. 启动开发服务器
 pnpm dev
+
+# 3. 访问项目
+# 打开浏览器访问 http://localhost:5173
 ```
 
-### Compile and Minify for Production
-
-```sh
-pnpm build
-```
