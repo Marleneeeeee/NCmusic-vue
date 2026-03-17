@@ -74,6 +74,7 @@ const playAll=()=>{
   border-radius: 8px;
   background: rgba(255,255,255,0.6);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
 .song-item {
