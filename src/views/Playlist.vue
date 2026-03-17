@@ -108,8 +108,11 @@ const fetchPlaylistSongs = async () => {
       artist: (s.ar || s.artists || []).map((a) => a.name).join('/') || '未知歌手',
       duration: s.dt || s.duration || 0,
       album: (s.al || s.album)?.name || '',
-      mvid: s.mv || s.mvid || 0
+      mvid: s.mv || s.mvid || 0,
+      fee:s.fee
     })) || []
+    console.log(newSongs);
+    
     // 将新数据追加到已有数组后面，而不是覆盖
     allSongs.value = [...allSongs.value, ...newSongs]
     // 更新下一次的 offset

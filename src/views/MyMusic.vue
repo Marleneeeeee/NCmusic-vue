@@ -6,6 +6,7 @@ import { useRouter } from 'vue-router';
 
 const userStore=useUserStore()
 const playlists=ref([])
+const albums=ref([])
 const router=useRouter()
 
 // 网络请求，获取用户歌单
@@ -25,8 +26,24 @@ const fetchUserPlaylists=async()=>{
     console.log("获取用户歌单失败",err);
   }
 }
+// const fetchUserDigitalAlbums=async()=>{
+//   try{
+//     const res=await api.get('/digitalAlbum/purchased');
+//     albums=res.paidAlbums?.map((item)=>({
+//       id:item.id,
+//       title:item.name,
+//       cover:
+//       publishTime:
+//       size:
+//     }))
+//   }
+//   catch(err){
+//     console.log("获取我的数字专辑失败",err);
+//   }
+// }
 onMounted(()=>{
     fetchUserPlaylists();
+    // fetchUserDigitalAlbums()
 })
 const handleGoLogin=()=>{
     router.push('/login')
@@ -111,6 +128,10 @@ const handleOpenPlaylist=(id)=>{
 
 .hint-btn:hover {
   background: #a00a0a;
+}
+
+.subtitle{
+  color: #444;
 }
 
 .tip {

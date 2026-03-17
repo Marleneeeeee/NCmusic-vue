@@ -5,9 +5,12 @@ import { formatDuration } from '@/utils/formatDuration';
 import { parseLyric } from '@/utils/parseLyric';
 import { usePlayerStore } from '@/stores/player';
 import defaultLogo from '@/assets/imgs/logo.png'
+import { useUserStore } from '@/stores/user';
 
 const playerStore=usePlayerStore()
 const songId=computed(()=>playerStore.songId)
+
+const userStore=useUserStore()
 
 // 获取audio标签
 const audioRef=ref(null)
@@ -16,6 +19,22 @@ const audioRef=ref(null)
 const songTitle=ref('网易云音乐 听你想听')
 const songArtist=ref('')
 const songCover=ref(defaultLogo)
+const songFee=ref(0)
+
+const feeInfo = computed(() => {
+  switch (songFee.value) {
+    case 0:
+      return '免费或无版权'
+    case 1:
+      return 'VIP 尊享单曲'
+    case 4:
+      return '数字专辑（需购买）'
+    case 8:
+      return 'VIP 尊享高音质'
+    default:
+      return '未知音源' // 防御性编程，处理意外的值
+  }
+})
 
 // 歌词
 const lyrics=ref([])
@@ -34,14 +53,21 @@ const playErrorTip=ref('') // 新增：自动播放失败提示
 // ================= 1. 获取数据的核心逻辑 =================
 // 获取歌曲详情
 const fetchSongDetail=async(id)=>{
+  // fee: enum,
+  // 0: 免费或无版权
+  // 1: VIP 歌曲
+  // 4: 购买专辑
+  // 8: 非会员可免费播放低音质，会员可播放高音质及下载
+  // fee 为 1 或 8 的歌曲均可单独购买 2 元单曲
     if(!id) return
     try{
         const res=await api.get('/song/detail',{ids:id})
         if(res.songs && res.songs.length > 0){
-          const song=res.songs[0]
-          songTitle.value=song.name||'未知歌曲'
-          songArtist.value=(song.ar||song.artists||[]).map((a)=>a.name).join('/')
-          songCover.value=(song.al||song.album)?.picUrl||defaultLogo
+          const song=res.songs[0];
+          songTitle.value=song.name||'未知歌曲';
+          songArtist.value=(song.ar||song.artists||[]).map((a)=>a.name).join('/');
+          songCover.value=(song.al||song.album)?.picUrl||defaultLogo;
+          songFee.value=song.fee||0
         }
     }
     catch(err){
@@ -72,6 +98,7 @@ const fetchSongUrl=async(id)=>{
     playErrorTip.value = ''
     try{
         const res=await api.get('/song/url',{id})
+        // 未登录状态或者非会员返回试听片段(返回字段包含被截取的正常歌曲的开始时间和结束时间)
         if(res.data && res.data.length > 0 && res.data[0].url){
           audioUrl.value=res.data[0].url||''
         }
@@ -93,6 +120,24 @@ watch(songId, (newId) => {
     fetchSongDetail(newId)
     fetchSongUrl(newId)
     fetchLyric(newId)
+  }
+  else {  // ⭐️ 核心修复：当 songId 变为 null（退出登录触发重置）时执行
+    // 1. 让音频立刻停止
+    if (audioRef.value) {
+      audioRef.value.pause()
+      audioRef.value.src = '' // 清空音源
+    }
+    // 2. 重置播放器的本地状态
+    isPlaying.value = false
+    audioUrl.value = ''
+    currentTime.value = 0
+    duration.value = 0
+    // 3. 恢复初始文案和封面
+    songTitle.value = '网易云音乐 听你想听'
+    songArtist.value = ''
+    songCover.value = defaultLogo // 恢复成默认 logo
+    lyrics.value = []
+    console.log('检测到播放器已重置，已停止当前音频播放')
   }
 }, { immediate: true })
 
@@ -127,29 +172,6 @@ const handleTogglePlay=()=>{
   }
   isPlaying.value = !isPlaying.value
 }
-// 上一曲
-const handlePrev = () => {
-  const { playlist, currentIndex } = playerStore
-  if (!playlist || playlist.length === 0) return
-  let prevIndex = currentIndex - 1
-  if (prevIndex < 0) prevIndex = playlist.length - 1 // 第一首再往前，跳到最后一首
-  const prevSong = playlist[prevIndex]
-  playerStore.playSong(prevSong.id, prevIndex, playlist)
-}
-// 下一曲
-const handleNext = () => {
-  const { playlist, currentIndex } = playerStore
-  if (!playlist || playlist.length === 0) return
-  console.log(playlist);
-  
-  let nextIndex = currentIndex + 1
-  if (nextIndex >= playlist.length) nextIndex = 0 // 最后一首再往后，跳到第一首
-  const nextSong = playlist[nextIndex]
-  console.log(nextSong);
-  
-  playerStore.playSong(nextSong.id, nextIndex, playlist)
-}
-
 
 // ================= 3. 进度与事件逻辑 =================
 const onTimeUpdate = () => {
@@ -190,9 +212,11 @@ const handleSongEnded = () => {
   currentTime.value = 0
   if (audioRef.value) audioRef.value.currentTime = 0
   // 自动切到下一曲
-  handleNext()
+  playerStore.playNext(true)
 }
-
+const handleBuyAlbum=()=>{
+  
+}
 </script>
 
 <template>
@@ -200,18 +224,21 @@ const handleSongEnded = () => {
     <div class="mini-player" @click="playerStore.toggleExpand">
       <img :src="songCover||url('@/assets/imgs/logo.png')" class="mini-cover" :class="{ 'rotating': isPlaying}" />
       <div class="mini-info">
-        <div class="mini-name">{{ songTitle }}</div>
+        <div class="mini-name">
+          <span class="songname">{{ songTitle }}</span>
+          <span v-if="songFee===1" class="vipsignal-small">vip</span>
+        </div>
         <div class="mini-artist">{{ songArtist }}</div>
       </div>
       <div class="mini-controls" @click.stop> 
-        <IconPreSong @click="handlePrev" theme="outline" size="24" fill="#333" class="control-icon" v-if="songId"/>
-        <IconPreSong @click="handlePrev" theme="outline" size="24" fill="#999" class="control-icon" v-else/>
-        <IconPause v-if="isPlaying&&songId" @click="handleTogglePlay" theme="outline" size="30" fill="#c20c0c" class="control-icon play-btn"/>
-        <IconPause v-else-if="isPlaying" @click="handleTogglePlay" theme="outline" size="30" fill="##999" class="control-icon play-btn" />
-        <IconPlay v-else-if="!isPlaying&&songId" @click="handleTogglePlay" theme="filled" size="30" fill="#c20c0c" class="control-icon play-btn" />
-        <IconPlay v-else @click="handleTogglePlay" theme="filled" size="30" fill="#999" class="control-icon play-btn" />
-        <IconNextSong @click="handleNext" theme="outline" size="24" fill="#333" class="control-icon" v-if="songId"/>
-        <IconNextSong @click="handleNext" theme="outline" size="24" fill="#999" class="control-icon" v-else/>
+        <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" fill="#333" class="control-icon" v-if="songId"/>
+        <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" fill="#999" class="control-icon" v-else/>
+        <IconPause v-if="isPlaying&&songId" @click="handleTogglePlay()" theme="outline" size="30" fill="#c20c0c" class="control-icon play-btn"/>
+        <IconPause v-else-if="isPlaying" @click="handleTogglePlay()" theme="outline" size="30" fill="##999" class="control-icon play-btn" />
+        <IconPlay v-else-if="!isPlaying&&songId" @click="handleTogglePlay()" theme="filled" size="30" fill="#c20c0c" class="control-icon play-btn" />
+        <IconPlay v-else @click="handleTogglePlay()" theme="filled" size="30" fill="#999" class="control-icon play-btn" />
+        <IconNextSong @click="playerStore.playNext()" theme="outline" size="24" fill="#333" class="control-icon" v-if="songId"/>
+        <IconNextSong @click="playerStore.playNext()" theme="outline" size="24" fill="#999" class="control-icon" v-else/>
       </div>
     </div>
 
@@ -221,9 +248,12 @@ const handleSongEnded = () => {
         <div class="bg-mask"></div>
 
         <div class="header-bar">
-          <IconDown @click="playerStore.toggleExpand" theme="outline" size="32" fill="#fff" class="collapse-btn"/>
+          <IconDown @click="playerStore.toggleExpand()" theme="outline" size="32" fill="#fff" class="collapse-btn"/>
           <div class="header-info">
-            <div class="title">{{ songTitle }}</div>
+            <div class="title">
+              <span class="songtitle">{{ songTitle }}</span>
+              <span v-if="songFee===1" class="vipsignal-big">vip</span>
+            </div>
             <div class="artist">{{ songArtist }}</div>
           </div>
         </div>
@@ -233,6 +263,22 @@ const handleSongEnded = () => {
             <div class="record-wrapper" :class="{ 'playing': isPlaying }">
               <img class="record-bg" src="@/assets/imgs/disc.png" alt="record-bg">
               <img class="record-cover" :src="songCover" alt="cover">
+            </div>
+            <div class="record-extra-info">
+              {{ feeInfo }}
+              <span 
+                class="action-link" 
+                v-if="(songFee === 1 || songFee === 8)&&!userStore.isVip" 
+              >
+                请前往客户端开通黑胶VIP
+              </span>
+              <span 
+                class="action-link" 
+                v-if="songFee === 4" 
+                @click="handleBuyAlbum"
+              >
+                点此购买 >
+              </span>
             </div>
           </div>
 
@@ -269,10 +315,18 @@ const handleSongEnded = () => {
                 <span class="time">{{ formatDuration(duration * 1000) }}</span>
               </div>
               <div class="controls-main">
-                <IconPreSong @click="handlePrev" theme="outline" size="32" fill="#fff" class="control-btn" />
-                <IconPause v-if="isPlaying" @click="handleTogglePlay" theme="outline" size="48" fill="#fff" class="control-btn play-btn" />
-                <IconPlay v-else @click="handleTogglePlay" theme="outline" size="48" fill="#fff" class="control-btn play-btn" />
-                <IconNextSong @click="handleNext" theme="outline" size="32" fill="#fff" class="control-btn" />
+                <!-- 0:顺序播放, 1:单曲循环, 2:随机播放 -->
+<!-- 当你在 HTML 中使用 @click="func" 而不加括号时，浏览器会自动将 PointerEvent (点击事件对象) 作为第一个参数传给该函数。
+在 playNext(isAuto = false) 中，参数 isAuto 接收到了这个事件对象。
+在 JavaScript 中，对象（Object）永远是 Truthy（真值）。 -->
+                <IconSeq v-if="playerStore.playMode===0" @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff"/>
+                <IconLoop v-else-if="playerStore.playMode===1" @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
+                <IconRandom v-else @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff"/>
+                <IconPreSong @click="playerStore.playPrev()" theme="outline" size="32" fill="#fff" class="control-btn" />
+                <IconPause v-if="isPlaying" @click="handleTogglePlay()" theme="outline" size="48" fill="#fff" class="control-btn play-btn" />
+                <IconPlay v-else @click="handleTogglePlay()" theme="outline" size="48" fill="#fff" class="control-btn play-btn" />
+                <IconNextSong @click="playerStore.playNext()" theme="outline" size="32" fill="#fff" class="control-btn" />
+                <IconInfo theme="outline" size="32" fill="#fff"/>
               </div>
             </div>
           </div>
@@ -338,10 +392,25 @@ const handleSongEnded = () => {
   justify-content: center;
 }
 
-.mini-name {
+.mini-name{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.songname{
   font-size: 15px;
   color: #333;
   margin-bottom: 4px;
+}
+
+.vipsignal-small {
+  padding: 0 3px;
+  border-radius: 4px;
+  background-color: #c20c0c;
+  color: #f2f2f2;
+  font-size: 10px;
+  flex-shrink: 0; /* 保证 VIP 图标永远不会被挤压变形 */
 }
 
 .mini-artist {
@@ -421,8 +490,24 @@ const handleSongEnded = () => {
 }
 
 .header-info .title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-info .title .songtitle{
   font-size: 20px;
   font-weight: 600;
+}
+
+.vipsignal-big{
+  padding: 0 5px;
+  border-radius: 5px;
+  background-color: #c20c0c;
+  color: #f2f2f2;
+  font-size: 12px;
+  flex-shrink: 0; /* 保证 VIP 图标永远不会被挤压变形 */
+  margin-left: 10px;
 }
 
 .header-info .artist {
@@ -445,8 +530,18 @@ const handleSongEnded = () => {
   flex: 1;
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
 }
-
+/* 👇 新增：下方文字的专属样式 */
+.record-extra-info {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6); /* 半透明白色，和右侧文字色调保持一致 */
+  text-align: center;
+  max-width: 80%; /* 防止文字过长换行时撑满屏幕 */
+  line-height: 1.5;
+}
 .record-wrapper {
   position: relative;
   width: 320px;

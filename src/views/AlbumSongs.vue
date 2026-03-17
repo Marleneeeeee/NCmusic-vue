@@ -37,7 +37,8 @@ const fetchAlbumDetail=async()=>{
             artist:(s.ar||s.artists||[]).map((a)=>a.name).join('/')||'未知歌手',
             duration:s.dt||s.duration||0,
             album:(s.al||s.album)?.name||'', //专辑名
-            mvid:s.mv||s.mvid||0
+            mvid:s.mv||s.mvid||0,
+            fee:s.fee
         }))||[]
     }
     catch(err){

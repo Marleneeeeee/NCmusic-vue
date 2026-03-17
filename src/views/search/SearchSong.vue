@@ -36,7 +36,8 @@ const fetchResults = async () => {
         artist: (t.ar||t.artists||[]).map((a)=>a.name).join('/'),
         duration: t.dt||t.duration||0,
         album: (t.al||t.album)?.name||'',
-        mvid: t.mvid
+        mvid: t.mvid,
+        fee:t.fee
       }))
       items.value = [...(items.value || []), ...newSongs]
       offset.value += limit

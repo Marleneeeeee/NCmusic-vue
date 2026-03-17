@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-import { Search,Like,PlayTwo, HeadphoneSound, Play, Pause, PauseOne, ReplayMusic, GoStart, GoEnd, DoubleDown} from '@icon-park/vue-next'
+import { Search,Like,PlayTwo, HeadphoneSound, Play, Pause, PauseOne, ReplayMusic, GoStart, GoEnd, DoubleDown, PlayCycle, ShuffleOne, PlayOnce, LoopOnce, HamburgerButton} from '@icon-park/vue-next'
 
 const app = createApp(App)
 app.use(createPinia())
@@ -21,5 +21,9 @@ app.component('IconReplay',ReplayMusic)
 app.component('IconPreSong',GoStart)
 app.component('IconNextSong',GoEnd)
 app.component('IconDown',DoubleDown)
+app.component('IconLoop',PlayOnce)
+app.component('IconRandom',ShuffleOne)
+app.component('IconSeq',LoopOnce)
+app.component('IconInfo',HamburgerButton)
 
 app.mount('#app')

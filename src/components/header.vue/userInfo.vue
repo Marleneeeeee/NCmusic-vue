@@ -3,6 +3,7 @@ import { ref } from "vue" // 注意：保留 ref 给 darkTheme 用
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
+console.log(userStore.user.id);
 
 const darkTheme = ref(false)
 
@@ -16,7 +17,10 @@ const handleLogout = () => {
 <div class="user-menu">
     <button class="user-wrap" type="button" @click="handleAvatarClick">
         <img :src="userStore.user?.avatar" alt="用户头像">
-        <span class="user-name">{{ userStore.user?.nickname||'我的账号' }}</span>
+        <div class="userinfo-row">
+            <span class="user-name">{{ userStore.user?.nickname||'我的账号' }}</span>
+            <span class="vipsignal" v-if="userStore.isVip">vip</span>
+        </div>
     </button>
     <div class="user-dropdown">
         <button class="user-dropdown-item" type="">
@@ -44,6 +48,7 @@ const handleLogout = () => {
   border: none;
   padding: 0;
   cursor: pointer;
+  gap: 5px;
 }
 
 .user-wrap img {
@@ -52,11 +57,27 @@ const handleLogout = () => {
   border-radius: 50%;
   object-fit: cover;
 }
-
+.userinfo-row{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 .user-name {
   font-size: 14px;
   color: #f5f5f5;
-  margin-left: 5px;
+}
+
+.vipsignal {
+  /* 魔法在这里：上1px，左右4px，下2px。故意给下方多留1px给'p'的尾巴 */
+  padding: 1px 4px 2px 4px; 
+  border-radius: 4px;
+  background-color: #c20c0c;
+  color: #f2f2f2;
+  font-size: 10px;
+  flex-shrink: 0; 
+  /* 确保盒子被当做一个完整的块来渲染，防止被外层容器强行压缩高度 */
+  display: inline-block; 
+  line-height: 1.1; /* 给文字一点点原生的呼吸空间 */
 }
 
 .user-dropdown {

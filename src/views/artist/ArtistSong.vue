@@ -19,7 +19,8 @@ const fetchSongs = async () => {
             artist:(t.ar||t.artists||[]).map((a)=>a.name).join('/'),
             duration:t.dt||t.duration||0,
             album:(t.al||t.album)?.name||'',
-            mvid:t.mv || t.mvid || 0
+            mvid:t.mv || t.mvid || 0,
+            fee:t.fee
         }))
     }
     catch (err) {

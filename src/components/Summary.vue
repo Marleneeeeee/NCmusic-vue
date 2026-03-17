@@ -30,7 +30,8 @@ const formattedSongs = computed(() => {
     artist: (s.ar || s.artists || []).map(a => a.name).join(' / '),
     duration: s.dt || s.duration || 0, 
     album: s.al?.name || s.album?.name || '未知专辑',
-    mvid: s.mv||s.mvid||0
+    mvid: s.mv||s.mvid||0,
+    fee:s.fee
   }))  
 })
 
