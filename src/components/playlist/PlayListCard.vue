@@ -16,7 +16,7 @@ console.log(item.trackCount)
 const handlePlaylistCardClick = (id) =>{
   if (!id) return
   router.push({
-    name:"musiclist",
+    name:"playlist",
     query:{id}
   })
 }

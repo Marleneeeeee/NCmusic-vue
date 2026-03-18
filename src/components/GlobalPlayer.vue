@@ -14,6 +14,7 @@ const router=useRouter()
 const playerStore=usePlayerStore()
 const songId=computed(()=>playerStore.songId)
 const showPaymentModal=ref(false)
+const likeStatus=ref(false)
 
 const userStore=useUserStore()
 
@@ -119,6 +120,28 @@ const fetchSongUrl=async(id)=>{
         console.log('获取歌曲播放地址失败',err);
     }
 }
+const initSongLike=async()=>{
+  // 1. 确保拿到的是 ID 的数值
+  const id = songId.value 
+  if (!id) return
+
+  // 2. 将数组 [id] 转换成字符串 "[id]"
+  try {
+    const res = await api.get('/song/like/check', { 
+      ids: JSON.stringify([id]) 
+    })
+    console.log('喜爱状态检查结果:', res)
+    // 3. 逻辑判定：
+    // 该接口返回的是一个数组，包含了传入 ID 中被标记为喜爱的 ID
+    // 如果返回的数组里包含当前的 id，说明是“喜爱”状态
+    if (res.ids) {
+      likeStatus.value = res.ids.includes(id)
+      console.log(likeStatus.value);
+    }
+  } catch (err) {
+    console.error('检查喜爱状态失败', err)
+  }
+}
 // 监听全局 songId 变化，触发拉取
 watch(songId, (newId) => {
   if (newId) {
@@ -127,6 +150,7 @@ watch(songId, (newId) => {
     fetchSongDetail(newId)
     fetchSongUrl(newId)
     fetchLyric(newId)
+    initSongLike(newId)
   }
   else {  // ⭐️ 核心修复：当 songId 变为 null（退出登录触发重置）时执行
     // 1. 让音频立刻停止
@@ -221,8 +245,22 @@ const handleSongEnded = () => {
   // 自动切到下一曲
   playerStore.playNext(true)
 }
-const handleBuyAlbum=(id)=>{
+const handleBuyAlbum=()=>{
   showPaymentModal.value=true
+}
+const toggleSongLike=async()=>{
+//   id: 歌曲 id uid: 用户 id like: 喜欢状态, true 表示喜欢, false 表示取消喜欢
+// 接口地址 : /song/like
+// 调用例子 : /song/like?id=2058263032&uid=32953014&like=true
+  try{
+    const res=await api.get('/like',{id:songId.value,like:!likeStatus.value})
+    if(res?.code===200){
+      likeStatus.value=!likeStatus.value
+    }
+  }
+  catch(err){
+    console.log('收藏/取消收藏歌曲出错',err)
+  }
 }
 </script>
 
@@ -238,6 +276,8 @@ const handleBuyAlbum=(id)=>{
         <div class="mini-artist">{{ songArtist }}</div>
       </div>
       <div class="mini-controls" @click.stop> 
+        <!-- <IconLike v-if="likeStatus" theme="filled" size="32" fill="#c20c0c" class="control-btn" @click="toggleSongLike()"/>
+        <IconLike v-else theme="outline" size="32" fill="#fff" class="control-btn" @click="toggleSongLike()"/> -->
         <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" fill="#333" class="control-icon" v-if="songId"/>
         <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" fill="#999" class="control-icon" v-else/>
         <IconPause v-if="isPlaying&&songId" @click="handleTogglePlay()" theme="outline" size="30" fill="#c20c0c" class="control-icon play-btn"/>
@@ -326,14 +366,16 @@ const handleBuyAlbum=(id)=>{
 <!-- 当你在 HTML 中使用 @click="func" 而不加括号时，浏览器会自动将 PointerEvent (点击事件对象) 作为第一个参数传给该函数。
 在 playNext(isAuto = false) 中，参数 isAuto 接收到了这个事件对象。
 在 JavaScript 中，对象（Object）永远是 Truthy（真值）。 -->
-                <IconSeq v-if="playerStore.playMode===0" @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
-                <IconLoop v-else-if="playerStore.playMode===1" @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
-                <IconRandom v-else @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
+                <IconLike v-if="likeStatus" theme="filled" size="32" fill="#c20c0c" class="control-btn" @click="toggleSongLike()"/>
+                <IconLike v-else theme="outline" size="32" fill="#fff" class="control-btn" @click="toggleSongLike()"/>
                 <IconPreSong @click="playerStore.playPrev()" theme="outline" size="32" fill="#fff" class="control-btn" />
                 <IconPause v-if="isPlaying" @click="handleTogglePlay()" theme="outline" size="48" fill="#fff" class="control-btn play-btn" />
                 <IconPlay v-else @click="handleTogglePlay()" theme="outline" size="48" fill="#fff" class="control-btn play-btn" />
                 <IconNextSong @click="playerStore.playNext()" theme="outline" size="32" fill="#fff" class="control-btn" />
-                <IconInfo theme="outline" size="32" fill="#fff" class="control-btn"/>
+                <!-- <IconInfo theme="outline" size="32" fill="#fff" class="control-btn"/> -->
+                <IconSeq v-if="playerStore.playMode===0" @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
+                <IconLoop v-else-if="playerStore.playMode===1" @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
+                <IconRandom v-else @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
               </div>
             </div>
           </div>

@@ -33,8 +33,8 @@ const router = createRouter({
       ]
     },
     {
-      path:'/musiclist',
-      name:'musiclist',
+      path:'/playlist',
+      name:'playlist',
       component:()=>import("../views/Playlist.vue")
     },
     {

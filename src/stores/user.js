@@ -15,6 +15,8 @@ export const useUserStore=defineStore('user',()=>{
     // 判断是否已经登录
     const isLoggedIn=computed(()=>!!user.value) //有没有值=>是否登录
 
+    const isLoginModalVisible = ref(false)
+
     // 状态管理的存储，不仅要在pinia，也要存储在本地
     const setUser=(payload)=>{
         if(!payload) return
@@ -90,5 +92,5 @@ export const useUserStore=defineStore('user',()=>{
     }
 
     initFromLocal()
-    return {user,isVip,isLoggedIn,setUser,clearUser}
+    return {user,isVip,isLoggedIn,isLoginModalVisible,setUser,clearUser}
 })

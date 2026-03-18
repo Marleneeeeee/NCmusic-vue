@@ -7,7 +7,7 @@ import LoginModal from '../modal/LoginModal.vue'
 import {ref} from 'vue'
 
 const userStore = useUserStore()
-const showLoginModal=ref(false)
+
 </script>
 
 
@@ -26,7 +26,7 @@ const showLoginModal=ref(false)
             <span 
               v-if="!userStore.isLoggedIn" 
               class="login-btn" 
-              @click="showLoginModal = true"
+              @click="userStore.isLoginModalVisible = true"
             >
               登录
             </span>
@@ -35,8 +35,8 @@ const showLoginModal=ref(false)
     </div>
 </header>
 <LoginModal 
-    v-if="showLoginModal" 
-    @close="showLoginModal = false" 
+    v-if="userStore.isLoginModalVisible" 
+    @close="userStore.isLoginModalVisible = false" 
   />
       
 </template>

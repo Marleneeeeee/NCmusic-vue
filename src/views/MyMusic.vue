@@ -3,11 +3,14 @@ import {computed,ref,onMounted} from 'vue'
 import api from '@/api';
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
+import CreatePlaylistModal from '@/components/modal/CreatePlaylistModal.vue';
 
 const userStore=useUserStore()
 const playlists=ref([])
 const albums=ref([])
 const router=useRouter()
+
+const showCreateModal = ref(false) // 控制弹窗显示
 
 // 网络请求，获取用户歌单
 const fetchUserPlaylists=async()=>{
@@ -19,8 +22,13 @@ const fetchUserPlaylists=async()=>{
         id:item.id,
         name:item.name,
         cover:item.coverImgUrl,
-        trackCount:item.trackCount
+        trackCount:item.trackCount,
+        userId:item.userId,
+        privacy:item.privacy,
+        specialType:item.specialType
     }))||[]
+    console.log(playlists.value);
+    
   }
   catch(err){
     console.log("获取用户歌单失败",err);
@@ -41,17 +49,23 @@ const fetchUserPlaylists=async()=>{
 //     console.log("获取我的数字专辑失败",err);
 //   }
 // }
+
+const handleCreateSuccess = () => {
+  showCreateModal.value = false // 关闭弹窗
+  fetchUserPlaylists() // 刷新列表，看到新歌单
+}
+
 onMounted(()=>{
     fetchUserPlaylists();
     // fetchUserDigitalAlbums()
 })
 const handleGoLogin=()=>{
-    router.push('/login')
+    userStore.isLoginModalVisible=true
 }
 const handleOpenPlaylist=(id)=>{
     if(!id) return
     router.push({
-        name:'musiclist',
+        name:'playlist',
         query:{id}
     })
 }
@@ -70,18 +84,40 @@ const handleOpenPlaylist=(id)=>{
                 <p class="subtitle">我的歌单</p>
                 <div v-if="!playlists.length" class="tip">暂无歌单，快去音乐馆收藏一些音乐吧</div>
                 <ul v-else class="playlist-list">
+                    <li class="playlist-item create-card" @click="showCreateModal = true">
+                      <div class="create-content">
+                        <div class="plus-icon">+</div>
+                        <p>新建歌单</p>
+                      </div>
+                    </li>
                     <li v-for="item in playlists" :key="item.id" class="playlist-item" @click="handleOpenPlaylist(item.id)">
                         <div class="cover">
                             <img :src="item.cover" alt="">
                         </div>
                         <div class="info">
-                            <p class="name">{{ item.name }}</p>
-                            <p class="count">共{{ item.trackCount }}首</p>
+                            <p class="name">{{ item.name }}
+                            </p>
+                            <div class="count">
+                              <span>共{{ item.trackCount }}首</span>
+                              <!-- 我创建的（隐私歌单） -->
+                              <div v-if="item.privacy">
+                                <IconPrivacy theme="filled" size="22" fill="#999"/>
+                              </div>
+                              <!-- 我创建的（非隐私歌单） -->
+                              <div v-else-if="userStore.user.id==item.userId&&item.specialType!=5">
+                                <IconAvator theme="filled" size="22" fill="#999"/>
+                              </div>
+                            </div>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
+        <CreatePlaylistModal 
+          v-if="showCreateModal" 
+          @close="showCreateModal = false"
+          @success="handleCreateSuccess"
+        />
     </div>
 </template>
 
@@ -142,10 +178,9 @@ const handleOpenPlaylist=(id)=>{
 
 .playlist-list {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 响应式布局 */
+  gap: 20px;
   list-style: none;
-  margin: 12px 0 0;
   padding: 0;
 }
 
@@ -155,6 +190,30 @@ const handleOpenPlaylist=(id)=>{
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
+.playlist-item :hover{
+  cursor: pointer;
+}
+
+/* “新建歌单”特殊卡片样式 */
+.create-card {
+  border: 2px dashed #e0e0e0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px; /* 保证和有封面的歌单高度接近 */
+}
+.create-card:hover {
+  border-color: #e0e0e0;
+  background: #fafafa;
+}
+.create-content {
+  text-align: center;
+  color: #999;
+}
+.create-card:hover .create-content { color: #888; }
+.plus-icon { font-size: 40px; font-weight: 200; margin-bottom: 8px; }
+.create-content p { margin: 0; font-size: 14px; }
 
 .cover {
   width: 100%;
@@ -186,5 +245,9 @@ const handleOpenPlaylist=(id)=>{
   margin: 0;
   font-size: 12px;
   color: #999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 22px;
 }
 </style>
