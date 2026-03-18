@@ -80,7 +80,7 @@ const closeBox = () => {
 </script>
 
 <template>
-  <modal theme="dark" @close="closeBox">
+  <modal theme="dark" @close="closeBox" width="400px">
       <div class="modal-header">
         <h3>购买数字专辑</h3>
         <span class="close-icon" @click="closeBox">&times;</span>

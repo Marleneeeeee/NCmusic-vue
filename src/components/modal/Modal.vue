@@ -2,10 +2,14 @@
 const props = defineProps({
   theme: {
     type: String,
-    default: 'light' // 默认是亮色（白底）
+    default: 'light' //默认亮色
+  },
+  // 新增：宽度参数，默认 420px
+  width: {
+    type: String,
+    default: '420px'
   }
 })
-
 const emit = defineEmits(['close'])
 
 const handleOverlayClick = () => {
@@ -19,6 +23,7 @@ const handleOverlayClick = () => {
       <div 
         class="modal-card" 
         :class="theme === 'dark' ? 'theme-dark' : 'theme-light'"
+        :style="{ width: props.width }"
         @click.stop
       >
         <slot></slot>
@@ -40,12 +45,12 @@ const handleOverlayClick = () => {
   align-items: center;
 }
 .modal-card {
-  width: 420px;
   padding: 24px;
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
   animation: popIn 0.3s ease-out;
+  max-width: 90vw;
 }
 
 /* 3. 提前写好两套皮肤的颜色 */

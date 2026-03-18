@@ -7,7 +7,7 @@ import { usePlayerStore } from '@/stores/player';
 import defaultLogo from '@/assets/imgs/logo.png'
 import { useUserStore } from '@/stores/user';
 import { useRouter } from 'vue-router';
-import BuyAlbum from './modal/BuyAlbum.vue';
+import BuyAlbumModal from './modal/BuyAlbumModal.vue';
 
 const router=useRouter()
 
@@ -326,14 +326,14 @@ const handleBuyAlbum=(id)=>{
 <!-- 当你在 HTML 中使用 @click="func" 而不加括号时，浏览器会自动将 PointerEvent (点击事件对象) 作为第一个参数传给该函数。
 在 playNext(isAuto = false) 中，参数 isAuto 接收到了这个事件对象。
 在 JavaScript 中，对象（Object）永远是 Truthy（真值）。 -->
-                <IconSeq v-if="playerStore.playMode===0" @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff"/>
+                <IconSeq v-if="playerStore.playMode===0" @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
                 <IconLoop v-else-if="playerStore.playMode===1" @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
-                <IconRandom v-else @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff"/>
+                <IconRandom v-else @click="playerStore.toggleMode()" theme="outline" size="32" fill="#fff" class="control-btn"/>
                 <IconPreSong @click="playerStore.playPrev()" theme="outline" size="32" fill="#fff" class="control-btn" />
                 <IconPause v-if="isPlaying" @click="handleTogglePlay()" theme="outline" size="48" fill="#fff" class="control-btn play-btn" />
                 <IconPlay v-else @click="handleTogglePlay()" theme="outline" size="48" fill="#fff" class="control-btn play-btn" />
                 <IconNextSong @click="playerStore.playNext()" theme="outline" size="32" fill="#fff" class="control-btn" />
-                <IconInfo theme="outline" size="32" fill="#fff"/>
+                <IconInfo theme="outline" size="32" fill="#fff" class="control-btn"/>
               </div>
             </div>
           </div>
@@ -341,7 +341,7 @@ const handleBuyAlbum=(id)=>{
       </div>
     </transition>
 
-    <BuyAlbum 
+    <BuyAlbumModal 
       v-if="showPaymentModal" 
       :album-id="songAlbumId" 
       @close="showPaymentModal = false" 

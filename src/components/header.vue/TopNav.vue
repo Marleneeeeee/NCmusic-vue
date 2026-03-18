@@ -3,9 +3,11 @@ import { RouterLink} from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import SearchBox from './SearchBox.vue'
 import userInfo from './userInfo.vue'
+import LoginModal from '../modal/LoginModal.vue'
+import {ref} from 'vue'
 
 const userStore = useUserStore()
-
+const showLoginModal=ref(false)
 </script>
 
 
@@ -21,11 +23,21 @@ const userStore = useUserStore()
         </nav>
         <div class="nav-actions">
             <searchBox></searchBox>
-            <router-link v-if="!userStore.isLoggedIn" to="/login" class="login-btn">登录</router-link>
+            <span 
+              v-if="!userStore.isLoggedIn" 
+              class="login-btn" 
+              @click="showLoginModal = true"
+            >
+              登录
+            </span>
             <userInfo v-else></userInfo>
         </div>
     </div>
 </header>
+<LoginModal 
+    v-if="showLoginModal" 
+    @close="showLoginModal = false" 
+  />
       
 </template>
 

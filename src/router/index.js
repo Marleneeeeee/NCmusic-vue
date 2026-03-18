@@ -14,11 +14,6 @@ const router = createRouter({
       component:()=>import("../views/MyMusic.vue")
     },
     {
-      path:'/login',
-      name:'login',
-      component:()=>import("../views/Login.vue")
-    },
-    {
       path:'/mvplayer',
       name:'mvplayer',
       component:()=>import("../views/MvPlayer.vue")

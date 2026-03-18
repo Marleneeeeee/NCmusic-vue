@@ -2,6 +2,7 @@ import {ref,computed} from 'vue'
 import { defineStore } from 'pinia'
 import api from '@/api'
 import { usePlayerStore } from './player'
+import { useSearchStore } from './searchHistory'
 
 // 本地存储的key
 const STORAGE_KEY='nc_user'
@@ -26,13 +27,24 @@ export const useUserStore=defineStore('user',()=>{
         localStorage.setItem(STORAGE_KEY,JSON.stringify(normalized))
         fetchVipInfo(normalized.id)
     }
-    const clearUser=()=>{
-        user.value=null
-        isVip.value=false
-        localStorage.removeItem(STORAGE_KEY)
-        // 用户下线，播放器记录也清除，否则变成不同账号在一个浏览器上共享了
-        const playerStore=usePlayerStore()
-        playerStore.resetPlayer()
+    const clearUser=async()=>{
+        try{
+            await api.get('/logout',{params:{timestamp:Date.now()}})
+            // 只有调用退出登录的接口才能清除cookie，否则身份信息还是自己，比如vip的歌还是可以放全曲
+        }
+        catch(err){
+            console.error('服务器退出失败，但我们仍将清除本地状态',err)
+        }
+        finally{
+            user.value=null
+            isVip.value=false
+            localStorage.removeItem(STORAGE_KEY)
+            // 用户下线，播放器记录也清除，否则变成不同账号在一个浏览器上共享了
+            const playerStore=usePlayerStore()
+            playerStore.resetPlayer()
+            const searchStore=useSearchStore()
+            searchStore.clearHistory()
+        }
     }
 
     // ⭐️ 新增：专门获取 VIP 信息的 Action

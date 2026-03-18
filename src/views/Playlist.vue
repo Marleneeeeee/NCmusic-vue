@@ -192,7 +192,7 @@ onUnmounted(() => {
         </div>
       </div>
       
-      <div class="listlike" v-if="playlistUserId !== userStore.user.id">
+      <div class="listlike" v-if="userStore.user?.id&&playlistUserId !== userStore.user.id">
         <span class="like-text">收藏歌单</span>
         <IconLike 
           v-if="!liked" 
