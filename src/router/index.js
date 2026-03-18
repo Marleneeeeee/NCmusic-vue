@@ -57,7 +57,7 @@ const router = createRouter({
       path:'/albumsongs',
       name:'albumsongs',
       component:()=>import("../views/AlbumSongs.vue")
-    }
+    },
   ],
 })
 router.afterEach((to, from) => {

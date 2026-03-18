@@ -6,9 +6,14 @@ import { parseLyric } from '@/utils/parseLyric';
 import { usePlayerStore } from '@/stores/player';
 import defaultLogo from '@/assets/imgs/logo.png'
 import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
+import BuyAlbum from './modal/BuyAlbum.vue';
+
+const router=useRouter()
 
 const playerStore=usePlayerStore()
 const songId=computed(()=>playerStore.songId)
+const showPaymentModal=ref(false)
 
 const userStore=useUserStore()
 
@@ -20,6 +25,7 @@ const songTitle=ref('网易云音乐 听你想听')
 const songArtist=ref('')
 const songCover=ref(defaultLogo)
 const songFee=ref(0)
+const songAlbumId=ref(0)
 
 const feeInfo = computed(() => {
   switch (songFee.value) {
@@ -67,7 +73,8 @@ const fetchSongDetail=async(id)=>{
           songTitle.value=song.name||'未知歌曲';
           songArtist.value=(song.ar||song.artists||[]).map((a)=>a.name).join('/');
           songCover.value=(song.al||song.album)?.picUrl||defaultLogo;
-          songFee.value=song.fee||0
+          songFee.value=song.fee||0;
+          songAlbumId.value=song.al.id||0
         }
     }
     catch(err){
@@ -214,8 +221,8 @@ const handleSongEnded = () => {
   // 自动切到下一曲
   playerStore.playNext(true)
 }
-const handleBuyAlbum=()=>{
-  
+const handleBuyAlbum=(id)=>{
+  showPaymentModal.value=true
 }
 </script>
 
@@ -267,15 +274,15 @@ const handleBuyAlbum=()=>{
             <div class="record-extra-info">
               {{ feeInfo }}
               <span 
-                class="action-link" 
                 v-if="(songFee === 1 || songFee === 8)&&!userStore.isVip" 
               >
                 请前往客户端开通黑胶VIP
               </span>
-              <span 
+              <span
                 class="action-link" 
                 v-if="songFee === 4" 
-                @click="handleBuyAlbum"
+                @click="handleBuyAlbum(songAlbumId)"
+                
               >
                 点此购买 >
               </span>
@@ -333,6 +340,12 @@ const handleBuyAlbum=()=>{
         </div>
       </div>
     </transition>
+
+    <BuyAlbum 
+      v-if="showPaymentModal" 
+      :album-id="songAlbumId" 
+      @close="showPaymentModal = false" 
+    />
 
     <audio 
       ref="audioRef" 
@@ -541,6 +554,16 @@ const handleBuyAlbum=()=>{
   text-align: center;
   max-width: 80%; /* 防止文字过长换行时撑满屏幕 */
   line-height: 1.5;
+}
+.action-link {
+  color: rgba(255, 255, 255, 0.9); ; /* 常用 UI 蓝色，你也可以直接写 blue */
+  cursor: pointer; /* 鼠标悬浮时变成小手 */
+}
+
+/* 可选：鼠标悬浮时加个下划线或者稍微变深一点，增加交互感 */
+.action-link:hover {
+  text-decoration: underline;
+  color: #306df9; /* 更深一点的蓝色 */
 }
 .record-wrapper {
   position: relative;
