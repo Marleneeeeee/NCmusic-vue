@@ -23,7 +23,8 @@ import TopNav from './components/header.vue/TopNav.vue'
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #f5f7fb;
+  /* background: #f5f7fb; */
+  background: var(--bg-body);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
     Arial, 'Noto Sans', sans-serif;
 }
@@ -32,4 +33,7 @@ import TopNav from './components/header.vue/TopNav.vue'
   overflow-y: auto;
   padding-bottom: 70px;
 }
+/* * {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+} */
 </style>

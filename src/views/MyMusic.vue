@@ -27,8 +27,7 @@ const fetchUserPlaylists=async()=>{
         privacy:item.privacy,
         specialType:item.specialType
     }))||[]
-    console.log(playlists.value);
-    
+    console.log('我的歌单',playlists.value);
   }
   catch(err){
     console.log("获取用户歌单失败",err);
@@ -136,44 +135,46 @@ const handleOpenPlaylist=(id)=>{
   margin: 0 0 16px;
   font-size: 20px;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .login-hint {
   margin-top: 24px;
   padding: 24px 28px;
   border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-surface);
 }
 
 .hint-text {
   margin: 0 0 12px;
   font-size: 14px;
-  color: #555;
+  color: var(--text-regular);
 }
 
 .hint-btn {
   padding: 6px 16px;
   border-radius: 16px;
   border: none;
-  background: #c20c0c;
+  background: var(--color-primary);
   color: #fff;
   font-size: 14px;
   cursor: pointer;
 }
 
 .hint-btn:hover {
-  background: #a00a0a;
+  background: var(--color-primary-hover);
 }
 
 .subtitle{
-  color: #444;
+  color: var(--text-regular);
+  margin-bottom: 10px;
 }
 
 .tip {
   margin-top: 16px;
   font-size: 14px;
-  color: #777;
+  color: var(--text-muted);
 }
 
 .playlist-list {
@@ -185,9 +186,9 @@ const handleOpenPlaylist=(id)=>{
 }
 
 .playlist-item {
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-surface);
   overflow: hidden;
 }
 .playlist-item :hover{
@@ -196,22 +197,22 @@ const handleOpenPlaylist=(id)=>{
 
 /* “新建歌单”特殊卡片样式 */
 .create-card {
-  border: 2px dashed #e0e0e0;
-  background: #fff;
+  border: 2px dashed var(--border-color);
+  background: var(--bg-hover);
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 200px; /* 保证和有封面的歌单高度接近 */
 }
 .create-card:hover {
-  border-color: #e0e0e0;
-  background: #fafafa;
+  border-color: var(--text-muted);
+  background: var(--border-color);
 }
 .create-content {
   text-align: center;
-  color: #999;
+  color: var(--text-muted);
 }
-.create-card:hover .create-content { color: #888; }
+.create-card:hover .create-content { color: var(--text-regular); }
 .plus-icon { font-size: 40px; font-weight: 200; margin-bottom: 8px; }
 .create-content p { margin: 0; font-size: 14px; }
 
@@ -226,8 +227,11 @@ const handleOpenPlaylist=(id)=>{
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.3s ease;
 }
-
+.cover:hover img {
+  transform: scale(1.06);
+}
 .info {
   padding: 8px 10px 10px;
 }
@@ -235,7 +239,7 @@ const handleOpenPlaylist=(id)=>{
 .name {
   margin: 0 0 4px;
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -244,7 +248,7 @@ const handleOpenPlaylist=(id)=>{
 .count {
   margin: 0;
   font-size: 12px;
-  color: #999;
+  color: var(--text-muted);
   display: flex;
   justify-content: space-between;
   align-items: center;

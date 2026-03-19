@@ -125,20 +125,20 @@ const formattedArtists = computed(() => {
 .module-title {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .more-text {
   font-size: 12px;
-  color: #999;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px 12px;
-  border: 1px solid #e1e1e1;
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   transition: background 0.2s;
 }
 
 .more-text:hover {
-  background: #f5f5f5;
+  background: var(--bg-hover);
 }
 </style>

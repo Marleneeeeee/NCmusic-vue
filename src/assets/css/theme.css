@@ -1,0 +1,61 @@
+/* src/assets/styles/theme.css */
+
+:root {
+  /* ================= 1. 品牌与核心色 ================= */
+  --color-primary: #c20c0c;         /* 网易红：用于高亮、VIP标识、播放按钮等 */
+  --color-primary-hover: #9c0909;   /* 红色悬浮态 */
+
+  /* ================= 2. 页面与容器背景 ================= */
+  /* 基础与表面背景 (随亮/暗模式动态切换) */
+  --bg-body: #f5f7fb;               /* 页面底层背景 (App.vue) */
+  --bg-surface: #fff;            /* 表面背景：用于所有浮窗、下拉框、卡片 (统一 SearchBox 和 userInfo 的弹窗) */
+  /* 导航栏专属 (恒定深色) */
+  --bg-header: #242424;             /* 顶部导航栏背景 (TopNav.vue) */
+
+  /* ================= 3. 交互与状态背景 ================= */
+  --bg-hover: #f2f2f2;              /* 常规悬浮色 (历史tag、普通列表 hover) */
+  --bg-hover-transparent1: #f2f2f2a0;              
+  --bg-hover-transparent2: #f2f2f280;              
+  --bg-hover-dark: #3a3a3a;         /* 深色区域的悬浮色 (导航栏 hover) */
+  --bg-active-dark: #000;        /* 深色区域激活状态 (导航栏 router-link-active) */
+
+  /* ================= 4. 文字颜色 ================= */
+  /* 常规文字 (浅色背景上) */
+  --text-primary: #333;          /* 主标题、核心文字 */
+  --text-regular: #666;          /* 常规文字、副标题 (搜索历史文字) */
+  --text-muted: #999;            /* 极弱提示字 (清空按钮、Placeholder) */
+  
+  /* 反色文字 (深色背景上) */
+  --text-inverse-primary: #fff;  /* 纯白文字 (Hover或深色导航栏高亮文字) */
+  --text-inverse-regular: #e5e5e5;  /* 浅灰文字 (深色导航栏上的默认文字) */
+
+  /* ================= 5. 边框与阴影 ================= */
+  --border-color: #e6e6e6;          /* 常规边框线 */
+  --border-dark: #202020;           /* 深色区域边框线 */
+  --shadow-surface: 0 8px 24px rgba(0, 0, 0, 0.15); /* 浮层统一阴影 */
+  --shadow-header: 0 2px 8px rgba(0, 0, 0, 0.2);    /* 导航栏底部阴影 */
+  --shadow-album: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* ================= 6. 夜间模式覆盖 (Dark Theme) ================= */
+/* 当 userInfo.vue 切换 darkTheme 时自动生效 */
+[data-theme="dark"] {
+  /* 替换为夜间背景 */
+  --bg-body: #121212;
+  --bg-surface: #1e1e1e;
+  
+  /* 替换交互色 */
+  --bg-hover: #2c2c2c;
+  --bg-hover-transparent1: #2c2c2ca0;
+  --bg-hover-transparent2: #2c2c2c80;
+  
+  /* 替换文字色 */
+  --text-primary: #e0e0e0;
+  --text-regular: #a0a0a0;
+  --text-muted: #666;
+  
+  /* 替换边框与阴影 */
+  --border-color: #333;
+  --shadow-surface: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-album: 0 0 10px rgba(255,255,255,0.3);
+}

@@ -68,7 +68,7 @@ const handleAlbumClick = (id) =>{
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   background: #121212; /* 黑胶唱片的黑色 */
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-album);
   z-index: 1;
   transition: right 0.4s ease; /* 添加抽出的动画过渡 */
 }
@@ -78,7 +78,7 @@ const handleAlbumClick = (id) =>{
   aspect-ratio: 1 / 1;
   border-radius: 6px; /* 稍微加一点圆角 */
   overflow: hidden;
-  background: #eee;
+  background: var(--bg-surface);
   position: relative;
   z-index: 2; /* 确保封面盖在唱片上面 */
   border: 1px solid rgba(0,0,0,0.05); /* 给专辑封面加个淡淡的边框，增强实体感 */
@@ -103,7 +103,7 @@ const handleAlbumClick = (id) =>{
 
 .title {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   margin: 0 0 4px;
   white-space: nowrap;
   overflow: hidden;
@@ -112,7 +112,7 @@ const handleAlbumClick = (id) =>{
 
 .publishTime {
   font-size: 13px;
-  color: #999;
+  color: var(--text-muted);
   margin: 0 0 4px;
   white-space: nowrap;
   overflow: hidden;

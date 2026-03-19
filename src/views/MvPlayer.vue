@@ -82,7 +82,7 @@ onMounted(() => {
 }
 .video-container {
   width: 100%;
-  background-color: #000;
+  background-color: var(--bg-body);
   border-radius: 8px;
   overflow: hidden;
   aspect-ratio: 16 / 9; /* 保持16:9的视频比例 */
@@ -96,7 +96,7 @@ onMounted(() => {
   outline: none;
 }
 .loading-tip {
-  color: #fff;
+  color: var(--text-muted);
   font-size: 16px;
 }
 .mv-info {
@@ -106,17 +106,19 @@ onMounted(() => {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 8px;
+  color: var(--text-primary);
 }
 .artist {
-  color: #666;
+  color: var(--text-regular);
   margin-bottom: 12px;
 }
 .time{
-  color: #333;
+  color: var(--text-regular);
+  margin-bottom: 20px;
 }
 .desc {
   font-size: 14px;
-  color: #888;
+  color: var(--text-muted);
   line-height: 1.5;
 }
 </style>

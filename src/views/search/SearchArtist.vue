@@ -94,8 +94,8 @@ onUnmounted(() => { if (observer) observer.disconnect() })
 </template>
 
 <style scoped>
-.status-tip { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 0; color: #999; font-size: 14px; }
-.loading-icon { width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #ec4141; border-radius: 50%; margin-bottom: 12px; animation: spin 1s linear infinite; }
+.status-tip { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 0; color: var(--text-muted); font-size: 14px; }
+.loading-icon { width: 30px; height: 30px; border: 3px solid var(--border-color); border-top: 3px solid var(--color-primary); border-radius: 50%; margin-bottom: 12px; animation: spin 1s linear infinite; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.bottom-tip { text-align: center; padding: 30px 0; color: #999; font-size: 14px; }
+.bottom-tip { text-align: center; padding: 30px 0; color: var(--text-muted); font-size: 14px; }
 </style>

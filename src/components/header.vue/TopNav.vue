@@ -51,7 +51,7 @@ const userStore = useUserStore()
   justify-content: center;
   background: #242424;
   color: #333;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-header);
 }
 
 .top-nav-inner {
@@ -88,7 +88,7 @@ const userStore = useUserStore()
 }
 
 .nav-link {
-  color: #e5e5e5;
+  color: var(--text-inverse-regular);
   text-decoration: none;
   font-size: 16px;
   padding: 8px 16px;
@@ -97,14 +97,14 @@ const userStore = useUserStore()
 }
 
 .nav-link:hover {
-  color: #fff;
-  background: #c20c0c;
+  color: var(--text-inverse-primary);
+  background: var(--color-primary);
 }
 
 .nav-link.router-link-active {
   /* <router-link> 会自动检测当前浏览器的 URL 路径，给 “匹配当前路由” 的链接标签添加 router-link-active 类名 */
-  color: #fff;
-  background: #c20c0c;
+  color: var(--text-inverse-primary);
+  background: var(--color-primary);
 }
 
 .nav-actions {
@@ -119,16 +119,16 @@ const userStore = useUserStore()
 .login-btn {
   padding: 6px 16px;
   border-radius: 999px;
-  border: 1px solid #c20c0c;
-  color: #c20c0c;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
   font-size: 14px;
   text-decoration: none;
   transition: all 0.2s;
 }
 
 .login-btn:hover {
-  background: #c20c0c;
-  color: #ffffff;
+  background: var(--color-primary);
+  color: var(--text-inverse-primary);
 }
 </style>
 

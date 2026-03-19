@@ -105,15 +105,15 @@ const handleTabClick = (path) => {
   max-width: 1000px;
   margin: 0 auto;
 }
-.title {
-  margin-top:25px;
-  font-size: 20px;
-  font-weight: 600;
-}
-.tip {
-  margin-top: 16px;
+/* 状态提示（加载、空数据） */
+.status-tip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 0;
+  color: var(--text-muted);
   font-size: 14px;
-  color: #777;
 }
 /* 核心：歌手信息容器 - 水平排列 + 垂直居中 */
 .artist-info {
@@ -137,7 +137,7 @@ const handleTabClick = (path) => {
   height: 250px;
   border-radius: 50%;
   overflow: hidden;
-  background: #eee;
+  background: var(--bg-surface);
 }
 
 .artist-avatar img {
@@ -151,6 +151,7 @@ const handleTabClick = (path) => {
   margin-top: 14px;
   font-size: 24px;
   margin-bottom: 0; /* 清除默认margin */
+  color: var(--text-primary);
 }
 
 /* 右半部分：描述 - 合理宽度 + 左对齐 */
@@ -161,7 +162,7 @@ const handleTabClick = (path) => {
 
 .artist-desc {
   font-size: 14px;
-  color: #777;
+  color: var(--text-muted);
   line-height: 1.6; /* 增加行高，提升可读性 */
   margin: 0; /* 清除默认margin */
 }
@@ -169,7 +170,7 @@ const handleTabClick = (path) => {
 .search-tabs {
   display: flex;
   gap: 32px;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 24px;
 }
 
@@ -177,17 +178,17 @@ const handleTabClick = (path) => {
   padding: 12px 4px;
   cursor: pointer;
   font-size: 15px;
-  color: #333;
+  color: var(--text-primary);
   position: relative;
   transition: all 0.3s ease;
 }
 
 .tab-item:hover {
-  color: #ec4141;
+  color: var(--color-primary);
 }
 
 .tab-item.active {
-  color: #ec4141;
+  color: var(--color-primary);
   font-weight: 600;
 }
 
@@ -199,23 +200,14 @@ const handleTabClick = (path) => {
   left: 0;
   width: 100%;
   height: 3px;
-  background-color: #ec4141;
+  background-color: var(--color-primary);
   border-radius: 2px;
 }
 
 .search-content{
   min-height: 400px; /* 确保切换时页面不会突然塌陷 */
 }
-/* 状态提示（加载、空数据） */
-.status-tip {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 100px 0;
-  color: #999;
-  font-size: 14px;
-}
+
 .result-list {
   animation: fadeIn 0.4s ease-out;
 }

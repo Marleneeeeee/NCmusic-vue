@@ -166,18 +166,18 @@ backgroundAttachment: 'fixed'
   margin: 0 0 8px;
   font-size: 32px; /* 标题放大 */
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .info-item {
   font-size: 14px;
-  color: #666;
+  color: var(--text-regular);
 }
 
 .desc {
   margin-top: 8px;
   font-size: 14px;
-  color: #555;
+  color: var(--text-muted);
   line-height: 1.6;
   /* 如果简介太长，限制最多显示 4 行，多余的变成省略号 */
   display: -webkit-box;
@@ -195,12 +195,12 @@ backgroundAttachment: 'fixed'
 .albumsize {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .tip {
   margin-top: 16px;
   font-size: 14px;
-  color: #777;
+  color: var(--text-muted);
 }
 </style>

@@ -204,7 +204,7 @@ const handleBlur = () => {
 }
 
 .search-input::placeholder {
-  color: #999;
+  color: var(--text-muted);
 }
 
 /* 历史记录下拉面板 */
@@ -214,9 +214,9 @@ const handleBlur = () => {
   top: 42px;
   left: -20px;
   width: 300px;
-  background: #fff;
+  background: var(--bg-surface);
   border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-surface);
   padding: 16px;
   z-index: 100;
 }
@@ -228,20 +228,20 @@ const handleBlur = () => {
   align-items: center;
   margin-bottom: 12px;
 }
-.history-title { font-size: 14px; color: #666; }
-.history-clear { font-size: 12px; color: #999; cursor: pointer; }
-.history-clear:hover { color: #333; }
+.history-title { font-size: 14px; color: var(--text-regular); }
+.history-clear { font-size: 12px; color: var(--text-muted); cursor: pointer; }
+.history-clear:hover { color: var(--text-primary); }
 .history-tags { display: flex; flex-wrap: wrap; gap: 10px; }
 .history-tag {
   padding: 4px 12px;
-  background: #f2f2f2;
+  background: var(--bg-hover);
   border-radius: 16px;
   font-size: 12px;
-  color: #333;
+  color: var(--text-primary);
   cursor: pointer;
   transition: background 0.2s;
 }
-.history-tag:hover { background: #e6e6e6; }
+.history-tag:hover { background: var(--border-color); }
 
 /* 搜索建议列表样式 */
 .suggest-panel {
@@ -257,16 +257,16 @@ const handleBlur = () => {
   transition: background 0.2s;
 }
 .suggest-title{
-    color: #333;
+    color: var(--text-primary);
     font-size: 14px;
     padding-left: 8px;
     font-weight: 400;
 }
 .suggest-item:hover {
-  background: #f2f2f2;
+  background: var(--bg-hover);
 }
 .suggest-name {
-  color: #333;
+  color: var(--text-primary);
   font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
@@ -274,7 +274,7 @@ const handleBlur = () => {
   max-width: 60%;
 }
 .suggest-artist {
-  color: #999;
+  color: var(--text-muted);
   font-size: 12px;
   margin-left: 6px;
   white-space: nowrap;

@@ -1,12 +1,29 @@
 <script setup>
-import { ref } from "vue" // 注意：保留 ref 给 darkTheme 用
+import { ref ,onMounted,watch} from "vue" // 注意：保留 ref 给 darkTheme 用
 import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 console.log(userStore.user.id);
 
 const darkTheme = ref(false)
-
+// 组件挂载时，读取本地存储的主题偏好
+onMounted(() => {
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme === 'dark') {
+    darkTheme.value = true
+    document.documentElement.setAttribute('data-theme', 'dark')
+  }
+})
+// 监听开关变化，动态修改 HTML 属性
+watch(darkTheme, (newVal) => {
+  if (newVal) {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    localStorage.setItem('theme', 'dark')
+  } else {
+    document.documentElement.removeAttribute('data-theme')
+    localStorage.setItem('theme', 'light')
+  }
+})
 const handleLogout = () => {
   userStore.clearUser()
 }
@@ -64,15 +81,15 @@ const handleLogout = () => {
 }
 .user-name {
   font-size: 14px;
-  color: #f5f5f5;
+  color: var(--text-inverse-regular);
 }
 
 .vipsignal {
   /* 魔法在这里：上1px，左右4px，下2px。故意给下方多留1px给'p'的尾巴 */
   padding: 1px 4px 2px 4px; 
   border-radius: 4px;
-  background-color: #c20c0c;
-  color: #f2f2f2;
+  background-color: var(--color-primary);
+  color: var(--text-inverse-primary);
   font-size: 10px;
   flex-shrink: 0; 
   /* 确保盒子被当做一个完整的块来渲染，防止被外层容器强行压缩高度 */
@@ -87,8 +104,8 @@ const handleLogout = () => {
   min-width: 120px;
   padding: 8px 0;
   border-radius: 8px;
-  background: #2d2d2d;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  background: var(--bg-hover-dark);
+  box-shadow: var(--shadow-surface);
   opacity: 0;
   pointer-events: none;
   transform: translateY(4px);
@@ -160,7 +177,7 @@ const handleLogout = () => {
 
 /* 开启状态：背景色（网易云红） */
 .toggle-switch input:checked + .toggle-slider {
-  background-color: #c20c0c;
+  background-color: var(--color-primary);
 }
 
 /* 开启状态：小圆点右移（重新计算位移：30-12-2-2=14） */

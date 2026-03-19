@@ -45,7 +45,7 @@ const handleClickMv=(id)=>{
   aspect-ratio: 16 / 9; /* 🌟 强制 16:9 比例 */
   border-radius: 8px;
   overflow: hidden;
-  background: #f0f0f0;
+  background: var(--bg-body);
 }
 .cover {
   width: 100%;
@@ -76,7 +76,7 @@ const handleClickMv=(id)=>{
 .name {
   margin-top: 4px;
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   display: -webkit-box;
   -webkit-line-clamp: 2; /* 超过两行省略号 */
   -webkit-box-orient: vertical;
@@ -84,7 +84,7 @@ const handleClickMv=(id)=>{
 }
 .artist {
   font-size: 12px;
-  color: #999;
+  color: var(--text-muted);
   margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;

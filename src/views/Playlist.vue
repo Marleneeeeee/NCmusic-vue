@@ -18,6 +18,7 @@ const playlistCover = ref('')
 const playlistTrackCount = ref(0)
 const playlistPlayCount = ref(0)
 const playlistUserId = ref(0)
+const playlistSpecialType=ref(0)
 const allSongs = ref([])
 const coverImgUrl = ref('')
 const loading = ref(false)
@@ -34,10 +35,13 @@ const hasMore = ref(true) // 是否还有更多歌曲
 const loadMoreRef = ref(null)
 let observer = null
 
-// 1. 新增一个计算属性，判断当前歌单是否为登录用户自己创建的
-const isMyPlaylist = computed(() => {
-  // 如果用户已登录，且歌单的创建者 ID 等于当前用户的 ID，则返回 true
-  return Boolean(userStore.user?.id && playlistUserId.value === userStore.user.id)
+// 修改之前的 isMyPlaylist，或者新建一个更准确的计算属性
+const canDeleteSong = computed(() => {
+  return Boolean(
+    userStore.user?.id && 
+    playlistUserId.value === userStore.user.id && 
+    playlistSpecialType.value === 0 // 核心：必须是 0（普通歌单）才允许删除单曲
+  )
 })
 
 const initLikeStatus = async () => {
@@ -108,6 +112,10 @@ const fetchPlayListDetail = async () => {
       playlistPlayCount.value = detail.playCount
       coverImgUrl.value = detail.coverImgUrl
       playlistUserId.value = detail.userId
+      playlistSpecialType.value=detail.specialType
+      // specialType: 0：普通歌单（用户自己手动创建的，可以删除）
+      // specialType: 5：“我喜欢的音乐”（系统自动生成的，不可删除）
+      // specialType: 10 等：其他系统或特殊业务歌单
     }
   } catch (err) {
     console.log("获取歌单详情失败", err)
@@ -252,7 +260,7 @@ onUnmounted(() => {
         />
       </div>
       
-      <SongList :songlist="allSongs" :showDelete="isMyPlaylist" :id="playlistId" @delete-success="onSongDeleted"></SongList>
+      <SongList :songlist="allSongs" :showDelete="canDeleteSong" :id="playlistId" @delete-success="onSongDeleted"></SongList>
 
       <div class="bottom-tip" ref="loadMoreRef">
         <span v-if="loadingMore">正在加载更多歌曲...</span>
@@ -286,7 +294,7 @@ onUnmounted(() => {
 .tip {
   margin-top: 16px;
   font-size: 14px;
-  color: #777;
+  color: var(--text-muted);
 }
 
 .num-info{
@@ -315,7 +323,7 @@ onUnmounted(() => {
 
 .like-text{
   font-size: 18px;
-  color:#666
+  color:var(--text-muted)
 }
 
 .like-icon{
@@ -325,7 +333,7 @@ onUnmounted(() => {
 .bottom-tip {
   text-align: center;
   padding: 20px 0;
-  color: #999;
+  color: var(--text-muted);
   font-size: 14px;
 }
 </style>

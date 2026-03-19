@@ -417,8 +417,8 @@ const toggleSongLike=async()=>{
 /* ==================== 底部 Mini 播放器 ==================== */
 .mini-player {
   height: 72px;
-  background: #fff;
-  border-top: 1px solid #eee;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   padding: 0 24px;
@@ -455,14 +455,14 @@ const toggleSongLike=async()=>{
 
 .songname{
   font-size: 15px;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .vipsignal-small {
   padding: 0 3px;
   border-radius: 4px;
-  background-color: #c20c0c;
+  background-color: var(--color-primary);
   color: #f2f2f2;
   font-size: 10px;
   flex-shrink: 0; /* 保证 VIP 图标永远不会被挤压变形 */
@@ -470,7 +470,7 @@ const toggleSongLike=async()=>{
 
 .mini-artist {
   font-size: 12px;
-  color: #888;
+  color: var(--text-muted);
 }
 
 .mini-controls {
@@ -558,7 +558,7 @@ const toggleSongLike=async()=>{
 .vipsignal-big{
   padding: 0 5px;
   border-radius: 5px;
-  background-color: #c20c0c;
+  background-color: var(--color-primary);
   color: #f2f2f2;
   font-size: 12px;
   flex-shrink: 0; /* 保证 VIP 图标永远不会被挤压变形 */

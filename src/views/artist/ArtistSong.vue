@@ -45,6 +45,6 @@ onMounted(fetchSongs)
 .tip {
   margin-top: 16px;
   font-size: 14px;
-  color: #777;
+  color: var(--text-muted);
 }
 </style>

@@ -35,14 +35,14 @@ const handleArtistClick=(artistId)=>{
   display: flex;
   align-items: center;
   padding: 12px 16px; /* 稍微增加一点上下内边距 */
-  border-bottom: 1px solid #f9f9f9; /* 线条改淡一点 */
+  border-bottom: 1px solid var(--border-color); /* 线条改淡一点 */
   cursor: pointer;
   font-size: 13px;
   transition: background 0.2s;
 }
 
 .artist-item:hover {
-  background: #fafafa;
+  background: var(--bg-hover-transparent1);
 }
 
 /* 1. 头像：圆形、固定大小、防变形 */
@@ -53,7 +53,7 @@ const handleArtistClick=(artistId)=>{
   overflow: hidden;
   margin-right: 16px;
   flex-shrink: 0;
-  border: 1px solid #f2f2f2;
+  border: 1px solid var(--border-color);
 }
 
 .artist-avatar {
@@ -73,7 +73,7 @@ const handleArtistClick=(artistId)=>{
 .artist-name {
   font-size: 15px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -88,7 +88,7 @@ const handleArtistClick=(artistId)=>{
 }
 
 .creation-num {
-  color: #888;
+  color: var(--text-muted);
   font-size: 13px;
   min-width: 60px; /* 固定最小宽度，保证上下行对齐 */
 }

@@ -179,7 +179,7 @@ const handleSingerClick = (id) =>{
   margin-top: 40px;
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .section-title--sub {
@@ -227,28 +227,6 @@ const handleSingerClick = (id) =>{
   transform: scale(1.06);
 }
 
-.info {
-  margin-top: 8px;
-}
-
-.title {
-  font-size: 14px;
-  color: #333;
-  margin: 0 0 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.desc {
-  font-size: 12px;
-  color: #999;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .song-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -270,7 +248,7 @@ const handleSingerClick = (id) =>{
   height: 82px;
   border-radius: 4px;
   overflow: hidden;
-  background: #eee;
+  background: var(--bg-surface);
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -293,7 +271,7 @@ const handleSingerClick = (id) =>{
 
 .song-name {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   margin: 0 0 4px;
   white-space: nowrap;
   overflow: hidden;
@@ -302,7 +280,7 @@ const handleSingerClick = (id) =>{
 
 .song-artist {
   font-size: 12px;
-  color: #999;
+  color: var(--text-muted);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -344,7 +322,7 @@ const handleSingerClick = (id) =>{
 
 .singer-name {
   font-size: 16px;
-  color: #333;
+  color: var(--text-primary);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -380,7 +358,8 @@ const handleSingerClick = (id) =>{
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: #f2f2f2;
+  background: var(--bg-hover-dark);
+  color: var(--text-primary);
   cursor: pointer;
   font-size: 22px;
   line-height: 1;
@@ -396,6 +375,6 @@ const handleSingerClick = (id) =>{
 }
 
 .singer-arrow:hover {
-  background: #e5e5e5;
+  background: rgba(255, 255, 255, 0.06);
 }
 </style>

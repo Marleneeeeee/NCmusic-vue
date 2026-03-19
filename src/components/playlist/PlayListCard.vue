@@ -92,7 +92,7 @@ const handlePlaylistCardClick = (id) =>{
 }
 .title {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   margin: 0 0 4px;
   white-space: nowrap;
   overflow: hidden;
@@ -100,7 +100,7 @@ const handlePlaylistCardClick = (id) =>{
 }
 .desc {
   font-size: 12px;
-  color: #999;
+  color: var(--text-muted);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;

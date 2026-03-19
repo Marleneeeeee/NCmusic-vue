@@ -86,19 +86,19 @@ const handleSummaryChangeTab = (type) => {
 
 <style scoped>
 /* 样式保持原样完全不变即可 */
-.search-page { min-height: calc(100vh - 90px); padding: 20px 30px; background-color: #fff; }
+.search-page { min-height: calc(100vh - 90px); padding: 20px 30px;}
 .search-inner { max-width: 1000px; margin: 0 auto; }
 .search-header { margin-bottom: 20px; }
-.title { font-size: 22px; font-weight: bold; color: #333; margin-bottom: 8px; }
-.keyword-tip { font-size: 13px; color: #666; }
+.title { font-size: 22px; font-weight: bold; color: var(--text-primary); margin-bottom: 8px; }
+.keyword-tip { font-size: 13px; color: var(--text-regular); }
 .highlight { color: #507af3; font-weight: 600; }
-.search-tabs { display: flex; gap: 32px; border-bottom: 1px solid #f2f2f2; margin-bottom: 24px; }
-.tab-item { padding: 12px 4px; cursor: pointer; font-size: 15px; color: #333; position: relative; transition: all 0.3s ease; }
-.tab-item:hover { color: #ec4141; }
-.tab-item.active { color: #ec4141; font-weight: 600; }
-.tab-item.active::after { content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background-color: #ec4141; border-radius: 2px; }
+.search-tabs { display: flex; gap: 32px; border-bottom: 1px solid var(--border-color); margin-bottom: 24px; }
+.tab-item { padding: 12px 4px; cursor: pointer; font-size: 15px; color: var(--text-primary); position: relative; transition: all 0.3s ease; }
+.tab-item:hover { color: var(--color-primary); }
+.tab-item.active { color: var(--color-primary); font-weight: 600; }
+.tab-item.active::after { content: ""; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background-color: var(--color-primary); border-radius: 2px; }
 .search-content{ min-height: 400px; }
 .result-list { animation: fadeIn 0.4s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.status-tip { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 0; color: #999; font-size: 14px; }
+.status-tip { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 0; color: var(--text-muted); font-size: 14px; }
 </style>

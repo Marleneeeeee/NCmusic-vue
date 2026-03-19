@@ -6,6 +6,7 @@ import { usePlayerStore } from '@/stores/player'
 import { useUserStore } from '@/stores/user'
 import AddToPlaylistModal from './modal/AddToPlaylistModal.vue'
 import DeleteFromPlaylistModal from './modal/DeleteFromPlaylistModal.vue'
+import api from '@/api'
 
 const emit = defineEmits(['delete-success'])
 
@@ -81,13 +82,33 @@ const handleDeleteSuccess = () => {
   // 触发自定义事件，把刚刚删除成功的歌曲 ID 传给父组件 Playlist.vue
   emit('delete-success', selectedSongId.value)
 }
+const handleDeletePlaylist=async()=>{
+  if(!props.id) return;
+  try{
+    const res=await api.get('/playlist/delete',{id:props.id})
+    if(res.code===200){
+      console.log(res);
+      
+      console.log('歌单删除成功');
+    }
+  }
+  catch(err){
+    console.log('歌单删除失败',err);
+  }
+}
 </script>
 
 
 <template>
-<div class="playAll" @click="playAll()">
-  <IconPlay theme="outline" size="22" fill="#c20c0c" class="play-icon"/>
-  <span>播放全部</span>
+<div class="playlist-operation">
+  <div class="iconandtext"  @click="playAll()">
+    <IconPlay theme="outline" size="22" fill="#c20c0c" class="icon"/>
+    <span class="playall">播放全部</span>
+  </div>
+  <div v-if="props.showDelete" class="iconandtext" @click="handleDeletePlaylist()">
+    <IconDelete theme="outline" size="22" fill="#c20c0c" title="删除歌单" class="icon"/>
+    <span>删除歌单</span>
+  </div>
 </div>
 <ul class="song-list" v-if="props.songlist && props.songlist.length > 0">
   <li class="song-item" v-for="(song,index) in props.songlist" :key="song.id" @click="handlePlaySong(song.id)">
@@ -133,15 +154,24 @@ const handleDeleteSuccess = () => {
 
 <style scoped>
 /* 前面的 .playAll 和 .song-list 样式保持你原来的不变 */
-.playAll{
-  margin-bottom: 15px;
-  padding: 2px;
-  display: inline-flex;
+.playlist-operation{
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
   align-items: center;
+}
+.iconandtext{
+  display: flex;
   gap: 10px;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 }
-.play-icon{
+.playall{
+  font-size: 16px;
+  color: var(--text-regular);
+}
+.icon{
   display: flex;
 }
 .song-list {
@@ -149,7 +179,7 @@ const handleDeleteSuccess = () => {
   padding: 0;
   list-style: none;
   border-radius: 8px;
-  background: rgba(255,255,255,0.6);
+  background: var(--bg-hover-transparent2);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   overflow: hidden;
 }
@@ -158,18 +188,18 @@ const handleDeleteSuccess = () => {
   display: flex;
   align-items: center;
   padding: 8px 16px;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid var(--border-color);
   cursor: pointer;
   font-size: 13px;
 }
 .song-item:last-of-type { border-bottom: none; }
-.song-item:hover { background: rgba(255,255,255,0.9); }
+.song-item:hover { background: var(--bg-hover-transparent1); }
 
 .song-index {
   width: 32px;
   text-align: right;
   margin-right: 15px;
-  color: #999;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
@@ -191,7 +221,7 @@ const handleDeleteSuccess = () => {
 
 .song-name {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -200,7 +230,7 @@ const handleDeleteSuccess = () => {
 .vipsignal {
   padding: 0 3px;
   border-radius: 4px;
-  background-color: #c20c0c;
+  background-color: var(--color-primary);
   color: #f2f2f2;
   font-size: 10px;
   flex-shrink: 0; /* 保证 VIP 图标永远不会被挤压变形 */
@@ -208,7 +238,7 @@ const handleDeleteSuccess = () => {
 
 .song-artist {
   margin-top: 2px;
-  color: #999;
+  color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -252,7 +282,7 @@ const handleDeleteSuccess = () => {
 .song-album {
   flex: 1; /* 在 song-extra 内部占据剩下的所有空间 */
   min-width: 0; 
-  color: #666;
+  color: var(--text-regular);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -262,7 +292,7 @@ const handleDeleteSuccess = () => {
 /* 时长 */
 .song-duration {
   width: 45px;
-  color: #999;
+  color: var(--text-muted);
   flex-shrink: 0;
   text-align: right;
 }
