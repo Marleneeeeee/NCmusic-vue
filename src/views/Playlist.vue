@@ -10,6 +10,9 @@ const userStore = useUserStore()
 const route = useRoute()
 
 const playlistId = computed(() => route.query.id)
+console.log('歌单id为',playlistId.value);
+
+
 const playlistName = ref('')
 const playlistCover = ref('')
 const playlistTrackCount = ref(0)
@@ -30,6 +33,12 @@ const hasMore = ref(true) // 是否还有更多歌曲
 // 1. 创建侦察兵的 ref 和 observer 实例
 const loadMoreRef = ref(null)
 let observer = null
+
+// 1. 新增一个计算属性，判断当前歌单是否为登录用户自己创建的
+const isMyPlaylist = computed(() => {
+  // 如果用户已登录，且歌单的创建者 ID 等于当前用户的 ID，则返回 true
+  return Boolean(userStore.user?.id && playlistUserId.value === userStore.user.id)
+})
 
 const initLikeStatus = async () => {
   if (!playlistId.value) return
@@ -52,17 +61,36 @@ const resetListState = () => {
   loadingMore.value = false
 }
 
+// 在 script 顶部定义一个防抖锁
+const isSubmitting = ref(false)
+
 const toggleLikeStatus = async (listid) => {
+  // 1. 如果正在请求中，直接抛弃新的点击事件，防止手快连点
+  if (isSubmitting.value) return 
+  isSubmitting.value = true
+
   try {
-    const time = Date.now()
-    if (!liked.value) {
-      await api.get('/playlist/subscribe', { t: 1, id: listid, timestamp: time, randomCNIP: true })
+    // 2. 根据当前状态决定 t 的值 (1: 收藏, 2: 取消收藏)
+    const t = liked.value ? 2 : 1 
+    
+    // 3. 发送请求：去掉了 randomCNIP: true，防止触发风控拦截
+    const res = await api.get('/playlist/subscribe', { 
+      t, 
+      id: listid, 
+      timestamp: Date.now() 
+    })
+
+    // 4. 只有接口明确返回 200 成功，才切换本地红心的显示状态
+    if (res?.code === 200) {
+      liked.value = !liked.value
     } else {
-      await api.get('/playlist/subscribe', { t: 2, id: listid, timestamp: time, randomCNIP: true })
+      console.log('操作失败，网易云返回：', res)
     }
-    liked.value = !liked.value
   } catch (err) {
     console.log('收藏/取消收藏失败', err)
+  } finally {
+    // 5. 不管成功失败，请求结束就解锁
+    isSubmitting.value = false
   }
 }
 
@@ -164,6 +192,18 @@ watch(loadMoreRef, (newEl) => {
   }
 })
 
+// ... 原本的代码 ...
+
+// 新增：处理歌曲删除成功后的本地列表更新
+const onSongDeleted = (deletedSongId) => {
+  // 直接从本地数组中剔除这首歌，页面会瞬间响应，不需要重新发网络请求
+  allSongs.value = allSongs.value.filter(song => song.id !== deletedSongId)
+  
+  // (可选) 如果你想让左上角的总数量也跟着减 1
+  if (playlistTrackCount.value > 0) {
+    playlistTrackCount.value--
+  }
+}
 
 onUnmounted(() => {
   if (observer) {
@@ -212,7 +252,7 @@ onUnmounted(() => {
         />
       </div>
       
-      <SongList :songlist="allSongs"></SongList>
+      <SongList :songlist="allSongs" :showDelete="isMyPlaylist" :id="playlistId" @delete-success="onSongDeleted"></SongList>
 
       <div class="bottom-tip" ref="loadMoreRef">
         <span v-if="loadingMore">正在加载更多歌曲...</span>

@@ -1,11 +1,54 @@
 <script setup>
+import {ref} from 'vue'
 import { useRouter } from 'vue-router'
 import { formatDuration } from '@/utils/formatDuration'
 import { usePlayerStore } from '@/stores/player'
+import { useUserStore } from '@/stores/user'
+import AddToPlaylistModal from './modal/AddToPlaylistModal.vue'
+import DeleteFromPlaylistModal from './modal/DeleteFromPlaylistModal.vue'
+
+const emit = defineEmits(['delete-success'])
 
 const router = useRouter()
-const props = defineProps(['songlist'])
+const props = defineProps({
+  songlist: {
+    type: Array,
+    default: () => []
+  },
+  showDelete: {
+    type: Boolean,
+    default: false // 默认不显示删除按钮
+  },
+  id:{
+    type:String,
+    default:'0'
+  }
+})
 const playerStore=usePlayerStore()
+const userStore=useUserStore()
+
+// 弹窗控制
+const showAddModal=ref(false)
+const showDeleteModal=ref(false)
+const selectedSongId=ref(null)
+
+const handleOpenAddModal=(songId)=>{
+  if(!userStore.isLoggedIn){
+    alert('请登陆后再收藏歌曲!')
+    return
+  }
+  selectedSongId.value=songId
+  showAddModal.value=true
+}
+
+const handleOpenDeleteModal=(songId)=>{
+  if(!userStore.isLoggedIn){
+    alert('请登陆后再取消收藏歌曲!')
+    return
+  }
+  selectedSongId.value=songId
+  showDeleteModal.value=true
+}
 
 const handlePlaySong=(songId)=>{
     if(!songId) return
@@ -32,6 +75,12 @@ const playAll=()=>{
     handlePlaySong(props.songlist[0].id,0)
   }
 }
+const handleDeleteSuccess = () => {
+  // 关闭弹窗
+  showDeleteModal.value = false
+  // 触发自定义事件，把刚刚删除成功的歌曲 ID 传给父组件 Playlist.vue
+  emit('delete-success', selectedSongId.value)
+}
 </script>
 
 
@@ -51,6 +100,9 @@ const playAll=()=>{
           <span class="song-artist">{{ song.artist }}</span>
       </div>
       <div class="song-extra">
+          <IconAdd theme="outline" size="20" fill="#999" class="add-btn" title="添加到歌单" @click.stop="handleOpenAddModal(song.id)"/>
+          <IconDelete v-if="props.showDelete" theme="outline" size="20" fill="#999" title="从歌单中删除" class="delete-btn" @click.stop="handleOpenDeleteModal(song.id)"/>
+          <!-- <span class="add-btn" title="添加到歌单" @click.stop="handleOpenAddModal(song.id)">+</span> -->
           <div class="mv-wrapper">
               <IconPlayMv v-if="song.mvid" theme="filled" size="20" fill="#c20c0c" class="playmv-icon" @click.stop="handleClickMv(song.mvid)"/>
           </div>
@@ -62,6 +114,18 @@ const playAll=()=>{
 <div v-else class="song-list-empty">
     暂无单曲数据
 </div>
+<AddToPlaylistModal 
+  v-if="showAddModal" 
+  :song-id="selectedSongId"
+  @close="showAddModal = false"
+/>
+<DeleteFromPlaylistModal 
+  v-if="showDeleteModal" 
+  :song-id="selectedSongId"
+  :playlistId="props.id"
+  @close="showDeleteModal = false"
+  @success="handleDeleteSuccess"
+/>
 </template>
 <!-- 防御性编程（Defensive Programming）”。
 作为组件的开发者，你不能“假设”调用这个组件的人（哪怕是未来的你自己）永远不会犯错。
@@ -154,10 +218,22 @@ const playAll=()=>{
 .song-extra {
   display: flex;
   align-items: center;
-  width: 25%; /* 给右侧区域分配一个固定的宽度比例 (可以根据需要微调) */
+  width: 35%; /* 给右侧区域分配一个固定的宽度比例 (可以根据需要微调) */
   flex-shrink: 0;
 }
-
+.add-btn{
+  /* font-size: 22px; 字号稍微大一点，方便点击 */
+  /* font-weight: 450; */
+  /* color: #b3b3b3; */
+  /* cursor: pointer; */
+  line-height: 1;
+  /* transition: color 0.2s, transform 0.2s; */
+  margin-right: 20px;
+}
+.delete-btn{
+  line-height: 1;
+  margin-right: 20px;
+}
 /* MV 占位盒子 */
 /* 修改这里 */
 .mv-wrapper {

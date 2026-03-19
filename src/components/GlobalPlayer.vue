@@ -276,8 +276,8 @@ const toggleSongLike=async()=>{
         <div class="mini-artist">{{ songArtist }}</div>
       </div>
       <div class="mini-controls" @click.stop> 
-        <!-- <IconLike v-if="likeStatus" theme="filled" size="32" fill="#c20c0c" class="control-btn" @click="toggleSongLike()"/>
-        <IconLike v-else theme="outline" size="32" fill="#fff" class="control-btn" @click="toggleSongLike()"/> -->
+        <IconLike v-if="likeStatus" theme="filled" size="24" fill="#c20c0c" class="control-icon" @click="toggleSongLike()"/>
+        <IconLike v-else theme="outline" size="24" fill="#333" class="control-icon" @click="toggleSongLike()"/>
         <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" fill="#333" class="control-icon" v-if="songId"/>
         <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" fill="#999" class="control-icon" v-else/>
         <IconPause v-if="isPlaying&&songId" @click="handleTogglePlay()" theme="outline" size="30" fill="#c20c0c" class="control-icon play-btn"/>
