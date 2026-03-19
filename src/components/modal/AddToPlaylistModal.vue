@@ -35,9 +35,11 @@ const fetchMyPlaylists = async () => {
   const uid = userStore.user?.id
   if (!uid) return
   try {
-    const res = await api.get('/user/playlist', { uid, timestamp: Date.now()})
+    const res = await api.get('/user/playlist/create', { uid, timestamp: Date.now()})
     if (res.code === 200) {
-      myPlaylists.value = res.playlist.filter(item => item.creator.userId === uid)
+      console.log('111',res);
+      myPlaylists.value = res.data.playlist
+      // myPlaylists.value = res.playlist.filter(item => item.creator.userId === uid)
     }
   } catch (err) {
     console.error("获取我的歌单失败", err)
