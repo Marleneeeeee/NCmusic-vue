@@ -101,7 +101,7 @@ const handleBlur = () => {
         @focus="isSearchFocused = true"
         @blur="isSearchFocused = false"
     >
-    <IconSearch class="search-icon" theme="outline" size="16" fill="#aaa" @click="handleSearch()"/>
+    <IconSearch class="search-icon" theme="outline" size="16" :fill="'var(--text-muted)'" @click="handleSearch()"/>
 
     <div 
         class="search-dropdown" 
@@ -185,6 +185,7 @@ const handleBlur = () => {
   align-items: center; /* 垂直居中 */
   padding: 0 12px;     /* 左右内边距，让图标和文字不贴边 */
   position: relative;
+  border: 1px solid var(--border-color);
 }
 
 .search-input {

@@ -358,7 +358,7 @@ const handleSingerClick = (id) =>{
   height: 44px;
   border-radius: 50%;
   border: none;
-  background: var(--bg-hover-dark);
+  background: var(--bg-hover-transparent2);
   color: var(--text-primary);
   cursor: pointer;
   font-size: 22px;
@@ -375,6 +375,6 @@ const handleSingerClick = (id) =>{
 }
 
 .singer-arrow:hover {
-  background: rgba(255, 255, 255, 0.06);
+    background: var(--bg-hover);
 }
 </style>

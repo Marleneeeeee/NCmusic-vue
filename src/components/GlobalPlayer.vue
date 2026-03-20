@@ -276,16 +276,17 @@ const toggleSongLike=async()=>{
         <div class="mini-artist">{{ songArtist }}</div>
       </div>
       <div class="mini-controls" @click.stop> 
-        <IconLike v-if="likeStatus" theme="filled" size="24" fill="#c20c0c" class="control-icon" @click="toggleSongLike()"/>
-        <IconLike v-else theme="outline" size="24" fill="#333" class="control-icon" @click="toggleSongLike()"/>
-        <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" fill="#333" class="control-icon" v-if="songId"/>
-        <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" fill="#999" class="control-icon" v-else/>
-        <IconPause v-if="isPlaying&&songId" @click="handleTogglePlay()" theme="outline" size="30" fill="#c20c0c" class="control-icon play-btn"/>
-        <IconPause v-else-if="isPlaying" @click="handleTogglePlay()" theme="outline" size="30" fill="##999" class="control-icon play-btn" />
-        <IconPlay v-else-if="!isPlaying&&songId" @click="handleTogglePlay()" theme="filled" size="30" fill="#c20c0c" class="control-icon play-btn" />
-        <IconPlay v-else @click="handleTogglePlay()" theme="filled" size="30" fill="#999" class="control-icon play-btn" />
-        <IconNextSong @click="playerStore.playNext()" theme="outline" size="24" fill="#333" class="control-icon" v-if="songId"/>
-        <IconNextSong @click="playerStore.playNext()" theme="outline" size="24" fill="#999" class="control-icon" v-else/>
+        <IconLike v-if="likeStatus" theme="filled" size="24" :fill="'var(--color-primary)'" class="control-icon" @click="toggleSongLike()"/>
+        <IconLike v-else-if="songId" theme="outline" size="24" :fill="'var(--text-primary)'" class="control-icon" @click="toggleSongLike()"/>
+        <IconLike v-else theme="outline" size="24" :fill="'var(--text-muted)'" class="control-icon" @click="toggleSongLike()"/>
+        <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" :fill="'var(--text-primary)'" class="control-icon" v-if="songId"/>
+        <IconPreSong @click="playerStore.playPrev()" theme="outline" size="24" :fill="'var(--text-muted)'" class="control-icon" v-else/>
+        <IconPause v-if="isPlaying&&songId" @click="handleTogglePlay()" theme="outline" size="30" :fill="'var(--color-primary)'" class="control-icon play-btn"/>
+        <IconPause v-else-if="isPlaying" @click="handleTogglePlay()" theme="outline" size="30" :fill="'var(--text-muted)'" class="control-icon play-btn" />
+        <IconPlay v-else-if="!isPlaying&&songId" @click="handleTogglePlay()" theme="filled" size="30" :fill="'var(--color-primary)'" class="control-icon play-btn" />
+        <IconPlay v-else @click="handleTogglePlay()" theme="filled" size="30" :fill="'var(--text-muted)'" class="control-icon play-btn" />
+        <IconNextSong @click="playerStore.playNext()" theme="outline" size="24" :fill="'var(--text-primary)'" class="control-icon" v-if="songId"/>
+        <IconNextSong @click="playerStore.playNext()" theme="outline" size="24" :fill="'var(--text-muted)'" class="control-icon" v-else/>
       </div>
     </div>
 
@@ -483,7 +484,6 @@ const toggleSongLike=async()=>{
   cursor: pointer;
   transition: opacity 0.2s;
 }
-
 .control-icon:hover {
   opacity: 0.8;
 }

@@ -221,13 +221,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-<div class="playlist-page" :style="{ 
-  background: coverImgUrl 
-    ? `linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.9)), url(${coverImgUrl}) no-repeat center center` 
-    : 'none',
-  backgroundSize: 'cover',
-  backgroundAttachment: 'fixed'
-}">
+<div class="playlist-page">
+  <div class="playlist-bg-container">
+    <div class="playlist-bg-blur" :style="{ backgroundImage: `url(${coverImgUrl})` }"></div>
+    <div class="playlist-bg-mask"></div>
+  </div>
   <div class="playlist-inner">
     <h2 class="title">{{ playlistName }}</h2>
     <div v-if="loading && offset === 0" class="tip">歌单加载中...</div>
@@ -235,7 +233,7 @@ onUnmounted(() => {
       <div class="num-info">
         <span>{{ playlistTrackCount }} 首</span>
         <div class="playcount">
-          <IconHaedphone theme="filled" size="20" fill="#c20c0c" class="headphone-icon"/>
+          <IconHaedphone theme="filled" size="20" :fill="'var(--color-primary)'" class="headphone-icon"/>
           <span class="playcount-num">{{formatCount(playlistPlayCount)}}次播放</span>
         </div>
       </div>
@@ -246,7 +244,7 @@ onUnmounted(() => {
           v-if="!liked" 
           theme="outline" 
           size="24" 
-          fill="#666" 
+          :fill="'var(--text-regular)'" 
           class="like-icon" 
           @click="toggleLikeStatus(playlistId)"
         />
@@ -254,7 +252,7 @@ onUnmounted(() => {
           v-else 
           theme="filled" 
           size="24" 
-          fill="#c20c0c" 
+          :fill="'var(--color-primary)'" 
           class="like-icon" 
           @click="toggleLikeStatus(playlistId)"
         />
@@ -274,13 +272,47 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-/* 保持原有样式不变 */
 .playlist-page {
   min-height: calc(100vh - 90px);
   padding: 24px 32px;
+  position: relative;
+}
+
+/* 下面的保持你现在的样子即可，无需改动：*/
+.playlist-bg-container {
+  position: absolute; /* 从 fixed 改为 absolute */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* 撑满整个 playlist-page 的高度 */
+  z-index: -1; 
+  pointer-events: none;
+  overflow: hidden;
+}
+
+
+.playlist-bg-blur {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(40px);
+  transform: scale(1.2);
+}
+
+.playlist-bg-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-hover-transparent2); /* 白天默认白色半透明 */
+  transition: background-color 0.3s ease;
 }
 
 .playlist-inner {
+  position: relative;
+  z-index: 1; /* 内容在最上层 */
   max-width: 1000px;
   margin: 0 auto;
 }
@@ -289,6 +321,7 @@ onUnmounted(() => {
   margin: 0 0 8px;
   font-size: 20px;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .tip {
@@ -302,6 +335,7 @@ onUnmounted(() => {
   gap: 20px;
   margin-bottom: 20px;
   align-items: center;
+  color: var(--text-regular);
 }
 
 .playcount{
@@ -323,7 +357,7 @@ onUnmounted(() => {
 
 .like-text{
   font-size: 18px;
-  color:var(--text-muted)
+  color:var(--text-regular)
 }
 
 .like-icon{

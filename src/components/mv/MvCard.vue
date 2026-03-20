@@ -23,7 +23,7 @@ const handleClickMv=(id)=>{
     <div class="cover-wrap">
       <img :src="item.cover" class="cover" />
       <div class="play-mask">
-        <IconPlayMv theme="filled" size="34" fill="#c20c0c" class="play-icon"/>
+        <IconPlayMv theme="filled" size="34" :fill="'var(--color-primary)'" class="play-icon"/>
       </div>
       <span class="duration">{{ formatDuration(item.duration) }}</span>
     </div>

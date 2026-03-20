@@ -55,13 +55,11 @@ onMounted(() => {
 
 
 <template>
-<div class="albumSongs-page" :style="{ 
-background: albumCover 
-  ? `linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.95)), url(${albumCover}) no-repeat center center` 
-  : 'none',
-backgroundSize: 'cover',
-backgroundAttachment: 'fixed'
-}">
+<div class="albumSongs-page">
+    <div class="albumSongs-bg-container">
+      <div class="albumSongs-bg-blur" :style="{ backgroundImage: `url(${albumCover})` }"></div>
+      <div class="albumSongs-bg-mask"></div>
+    </div>
     <div class="albumSongs-inner">
         <div class="album-header">
             <div class="cover-box">
@@ -93,8 +91,38 @@ backgroundAttachment: 'fixed'
 .albumSongs-page {
   min-height: calc(100vh - 90px);
   padding: 40px 32px; /* 增加一点上下内边距 */
+  position: relative;
+}
+.albumSongs-bg-container {
+  position: absolute; /* 从 fixed 改为 absolute */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; /* 撑满整个 playlist-page 的高度 */
+  z-index: -1; 
+  pointer-events: none;
+  overflow: hidden;
 }
 
+
+.albumSongs-bg-blur {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(40px);
+  transform: scale(1.2);
+}
+
+.albumSongs-bg-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-hover-transparent1); /* 白天默认白色半透明 */
+  transition: background-color 0.3s ease;
+}
 .albumSongs-inner {
   max-width: 1000px; /* 稍微收窄一点，让排版更紧凑 */
   margin: 0 auto;
@@ -150,7 +178,7 @@ backgroundAttachment: 'fixed'
   
   /* 质感光泽渐变 */
   background-image: radial-gradient(circle, #222 10%, #121212 20%, #1a1a1a 80%, #000 100%);
-  box-shadow: inset 0 0 10px rgba(255,255,255,0.05), 0 0 12px rgba(0,0,0,0.4);
+  box-shadow: var(--shadow-album);
   z-index: 1; /* 垫底 */
 }
 

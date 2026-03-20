@@ -102,11 +102,11 @@ const handleDeletePlaylist=async()=>{
 <template>
 <div class="playlist-operation">
   <div class="iconandtext"  @click="playAll()">
-    <IconPlay theme="outline" size="22" fill="#c20c0c" class="icon"/>
+    <IconPlay theme="outline" size="22" :fill="'var(--color-primary)'" class="icon"/>
     <span class="playall">播放全部</span>
   </div>
   <div v-if="props.showDelete" class="iconandtext" @click="handleDeletePlaylist()">
-    <IconDelete theme="outline" size="22" fill="#c20c0c" title="删除歌单" class="icon"/>
+    <IconDelete theme="outline" size="22" :fill="'var(--color-primary)'" title="删除歌单" class="icon"/>
     <span>删除歌单</span>
   </div>
 </div>
@@ -121,11 +121,11 @@ const handleDeletePlaylist=async()=>{
           <span class="song-artist">{{ song.artist }}</span>
       </div>
       <div class="song-extra">
-          <IconAdd theme="outline" size="20" fill="#999" class="add-btn" title="添加到歌单" @click.stop="handleOpenAddModal(song.id)"/>
-          <IconDelete v-if="props.showDelete" theme="outline" size="20" fill="#999" title="从歌单中删除" class="delete-btn" @click.stop="handleOpenDeleteModal(song.id)"/>
+          <IconAdd theme="outline" size="20" :fill="'var(--text-muted)'" class="add-btn" title="添加到歌单" @click.stop="handleOpenAddModal(song.id)"/>
+          <IconDelete v-if="props.showDelete" theme="outline" size="20" :fill="'var(--text-muted)'" title="从歌单中删除" class="delete-btn" @click.stop="handleOpenDeleteModal(song.id)"/>
           <!-- <span class="add-btn" title="添加到歌单" @click.stop="handleOpenAddModal(song.id)">+</span> -->
           <div class="mv-wrapper">
-              <IconPlayMv v-if="song.mvid" theme="filled" size="20" fill="#c20c0c" class="playmv-icon" @click.stop="handleClickMv(song.mvid)"/>
+              <IconPlayMv v-if="song.mvid" theme="filled" size="20" :fill="'var(--color-primary)'" class="playmv-icon" @click.stop="handleClickMv(song.mvid)"/>
           </div>
           <span class="song-album">{{ song.album }}</span>
           <span class="song-duration">{{ formatDuration(song.duration) }}</span>

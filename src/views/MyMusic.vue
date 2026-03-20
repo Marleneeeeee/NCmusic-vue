@@ -100,11 +100,11 @@ const handleOpenPlaylist=(id)=>{
                               <span>共{{ item.trackCount }}首</span>
                               <!-- 我创建的（隐私歌单） -->
                               <div v-if="item.privacy">
-                                <IconPrivacy theme="filled" size="22" fill="#999"/>
+                                <IconPrivacy theme="filled" size="22" :fill="'var(--text-muted)'"/>
                               </div>
                               <!-- 我创建的（非隐私歌单） -->
                               <div v-else-if="userStore.user.id==item.userId&&item.specialType!=5">
-                                <IconAvator theme="filled" size="22" fill="#999"/>
+                                <IconAvator theme="filled" size="22" :fill="'var(--text-muted)'"/>
                               </div>
                             </div>
                         </div>

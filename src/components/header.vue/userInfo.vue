@@ -5,7 +5,7 @@ import { useUserStore } from '@/stores/user'
 const userStore = useUserStore()
 console.log(userStore.user.id);
 
-const darkTheme = ref(false)
+const darkTheme = ref(true)
 // 组件挂载时，读取本地存储的主题偏好
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme')
@@ -81,7 +81,7 @@ const handleLogout = () => {
 }
 .user-name {
   font-size: 14px;
-  color: var(--text-inverse-regular);
+  color: var(--text-primary);
 }
 
 .vipsignal {
@@ -104,7 +104,7 @@ const handleLogout = () => {
   min-width: 120px;
   padding: 8px 0;
   border-radius: 8px;
-  background: var(--bg-hover-dark);
+  background: var(--bg-surface);
   box-shadow: var(--shadow-surface);
   opacity: 0;
   pointer-events: none;
@@ -125,7 +125,7 @@ const handleLogout = () => {
   padding: 6px 14px;
   border: none;
   background: transparent;
-  color: #f5f5f5;
+  color: var(--text-regular);
   font-size: 12px;
   text-align: left;
   cursor: pointer;
@@ -186,7 +186,7 @@ const handleLogout = () => {
 }
 
 .user-dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--bg-hover);
 }
 
 .user-menu:hover .user-dropdown {

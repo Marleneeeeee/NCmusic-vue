@@ -30,10 +30,13 @@ import TopNav from './components/header.vue/TopNav.vue'
 }
 .main-content {
   flex: 1;
+  margin-top: 90px;
+  margin-bottom: 72px;
+  /* 👇 新增这两行，创建一个独立的层叠上下文“结界” */
   overflow-y: auto;
-  padding-bottom: 70px;
+  z-index: 0;
 }
-/* * {
+* {
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-} */
+}
 </style>
